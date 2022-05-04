@@ -1,0 +1,118 @@
+{
+  "request-date": "[request datettime]",
+  "language": "es",
+  "city-code": "sdq",
+  "city-name": "Santo Domingo",
+  "Temp": "32",
+  "Locations": [
+    {
+      "id": "sdq",
+      "name": "Santo Domingo",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "x": 500,
+      "y": 330,
+      "picts": [
+        "http://host/pict11.jpg",
+        "http://host/pict12.jpg"
+      ]
+    },
+    {
+      "id": "mia",
+      "name": "Miami",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "x": 880,
+      "y": 610,
+      "picts": [
+        "http://host/pict21.jpg",
+        "http://host/pict22.jpg"
+      ]
+    },
+    {
+      "id": "cub",
+      "name": "Cuba",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "x": 970,
+      "y": 710,
+      "picts": [
+        "http://host/pict21.jpg",
+        "http://host/pict22.jpg"
+      ]
+    },
+    {
+      "id": "mex",
+      "name": "Mexico",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "x": 665,
+      "y": 765,
+      "picts": [
+        "http://host/pict21.jpg",
+        "http://host/pict22.jpg"
+      ]
+    },
+    {
+      "id": "nic",
+      "name": "Nicaragua",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "x": 830,
+      "y": 851,
+      "picts": [
+        "http://host/pict21.jpg",
+        "http://host/pict22.jpg"
+      ]
+    },
+    {
+      "id": "col",
+      "name": "Colombia",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "x": 970,
+      "y": 1001,
+      "picts": [
+        "http://host/pict21.jpg",
+        "http://host/pict22.jpg"
+      ]
+    }
+  ],
+  "planes": [
+    {
+      "id": "9H-AMD",
+      "name": "Plane1",
+      "label": "Visible label name",
+      "img-url": "http://host/img1.jpg",
+      "video-url": "http://host/video1",
+      "from": "mia",
+      "to": "sdq",
+      "total-time": 5,
+      "fligh-time": 2,
+      "seating": "220 asientos",
+      "flights-range": "Rango de vuelo de 5 horas",
+      "capacity": "21,000 kg de capacidad",
+      "size": "37,57 metros de largo"
+    },
+    {
+      "id": "9H-AME",
+      "name": "Plane2",
+      "label": "Visible label name2",
+      "img-url": "http://host/img2.jpg",
+      "video-url": "http://host/video2",
+      "from": "mex",
+      "to": "bgt",
+      "total-time": 8,
+      "fligh-time": 5,
+      "seating": "320 asientos",
+      "flights-range": "Rango de vuelo de 10 horas",
+      "capacity": "42,000 kg de capacidad",
+      "size": "40,57 metros de largo"
+    }
+  ],
+  "image_urls": [
+    {
+      "image": "https://wallpapers.com/images/high/hd-river-in-the-mountains-kgb9wrcm1wmrfa5m.jpg"
+    },
+    {
+      "image": "https://wallpapers.com/images/high/hd-vacation-house-in-the-beach-j4jasqgcc5ismew8.jpg"
+    },
+    {
+      "image": "https://wallpapers.com/images/high/hd-beach-dock-44r3w5nyqr38tq16.jpg"
+    }
+  ]
+}

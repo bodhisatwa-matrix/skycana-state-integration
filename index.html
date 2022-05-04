@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skycana Template</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/vue@3" defer></script>
+    <script src="https://unpkg.com/mitt/dist/mitt.umd.js" defer></script>
+  </head>
+  <body>
+    <div id="app">
+      <template>
+        <HomeScreenComponent></HomeScreenComponent>
+      </template>
+    </div>
+    <div id="world-map"></div>
+    <div id="plane-screen"></div>
+    <div class="flying-plane">
+      <svg class="flight-path-container">
+        <path class="flight-path" d="" />
+      </svg>
+      <img src="./Assets/Images/Planes/01.png" alt="" style="width: 100px;" id="plane">
+    </div>
+    <svg class="real-time__planes">
+    </svg>
+    <div class="plane-name__pop-up">
+      <div class="plane-id">IB54345</div>
+      <div class="plane-name">Volando actualmente</div>
+      <div class="locations">
+        <div class="location-source">
+          <h3>HACIA</h3>
+          <h2>MEX</h2>
+        </div>
+        <div>
+          <div>
+            <img src="./Assets/Images/Planes/01.png" alt="" class="plane_img">
+          </div>
+          <div>
+            <img src="./Assets/Images/Path866.png" alt="" class="path_img">
+          </div>
+        </div>
+        <div class="location-destination">
+          <h3>DESDE</h3>
+          <h2>SDQ</h2>
+        </div>
+      </div>
+      <div class="timing_label">
+        <div class="depature_label">Tiempo de vuelo</div>
+        <div class="arival_label">Tiempo restante</div>
+      </div>
+      <div class="plane_timing">
+        <div class="plane-depature">
+          <h2>04.00</h2>
+        </div>
+        <div class="plane-arival">
+          <h2>00.35</h2>
+        </div>
+      </div>
+    </div>
+    <div class="city-data__pop-up">
+      <div class="city-data__header">
+        <div class="top-header">
+          <div class="time">12:05</div>
+          <div class="city_name">Mexico</div>
+        </div>
+        <div class="low-header">
+          <div class="temp">
+            <div class="temp__icon">
+              <img src="./Assets/Images/cloud-icon.png" alt="">
+            </div>
+            <div class="temp_data">30 &#8451;</div>
+          </div>
+          <div class="city__description">Mexico, officially the United Mexican States, is a country in the southern
+            portion of North America.</div>
+        </div>
+      </div>
+      <div class="city-data__img-slider">
+        <div class="slider__left-arrow" onclick="plusSlides(-1)"></div>
+        <div class="slider__img-container">
+          <div class="img__slider">
+
+          </div>
+          <div class="slider-dot" style="text-align:center">
+
+          </div>
+        </div>
+        <div class="slider__right-arrow" onclick="plusSlides(1)"></div>
+      </div>
+    </div>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.2/gsap.min.js" defer></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>
