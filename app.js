@@ -45,6 +45,7 @@ var planes = [];
 var city_images = [];
 var airport = new Airport();
 var active_plane = 1;
+let slideIndex = 1;
 
 /** All events **/
 emitter.on('startApp', (event) => {
@@ -176,9 +177,9 @@ function backToHome() {
     _$(".zoomed-in").style.display = "block";
     mapIsZommedIn = false;
     whichWindow = "big";
-  }, 2000);
+  }, 2000); // return to start page after 2sec.
 }
-
+/** all window start animation **/
 function startAnimation(which, window) {
   switch(which) {
     case 1: {
@@ -227,6 +228,8 @@ function startAnimation(which, window) {
     }
   }
 }
+/**************/
+/** all window stop animation**/
 function stopAnimation(window) {
   if(window == "big") {
     _$("#Path_511_first_window").setAttribute("d", "M0,0H434.544V487.045H0Z");
@@ -247,6 +250,8 @@ function stopAnimation(window) {
     _$("#Line__3").setAttribute("transform","translate(67.614 158.131)");
   }
 }
+/**************/
+/** open sepecific screen after animation complete or switch screen **/
 function openWindow(which) {
   if(whichWindow == "big") {
     switch (which) {
@@ -292,10 +297,13 @@ function openWindow(which) {
     }
   }
 }
+/**************/
+/** close specific screen **/
 function closeWindow(which) {
   if(whichWindow == "big") {} else if(whichWindow = "small") {}
 }
-
+/**************/
+/** opne first screen  **/
 function firstScreen() {
   selected_option = "vuelos-shutter";
   _$(".zoomed-in").style.display = "none";
@@ -334,7 +342,8 @@ function firstScreen() {
     showLocations();
   }
 }
-
+/**************/
+/** open second screen **/
 function secondScreen() {
   selected_option = "destinos-shutter";
   _$(".zoomed-in").style.display = "none";
@@ -375,7 +384,8 @@ function secondScreen() {
       showDestinationPoints();
   }
 }
-
+/**************/
+/** open third screen **/
 function thirdScreen() {
   if(mapIsZommedIn) mapIsZommedIn = false;
   selected_option = "flota-shutter";
@@ -391,13 +401,15 @@ function thirdScreen() {
   gsap.to(".world-map", { opacity: 1, display: "block", duration: 2 });
   gsap.to(".nuestra-flota", { opacity: 1, display: "block", duration: 2 });
 }
-
+/**************/
+/** for world map zoomin with condition **/
 function mapZoomIn () {
   if (!mapIsZommedIn && selected_option !== "flota-shutter") {
     mapIsZommedIn = true;
   }
 }
-
+/**************/
+/** after zoomin world map set to center **/
 function setMapToCenter() {
   _$('.container').setAttribute("tabindex", 1);
   _$('.container').focus();
@@ -410,7 +422,8 @@ function setMapToCenter() {
   }
   autoZoom(_$("#Map").getBoundingClientRect().width);
 }
-
+/**************/
+/** auto zoom **/
 function autoZoom(width) {
   var timeline = gsap.timeline({delay: 1});
   timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
@@ -421,7 +434,8 @@ function autoZoom(width) {
     _$("#Map").style.transformOrigin = "400px 660px";
   }
 }
-
+/**************/
+/** show city locations on first screen **/
 function showLocations() {
   if (selected_option === "vuelos-shutter") {
     gsap.from(".world-map__destinations", { opacity: 0 });
@@ -435,12 +449,14 @@ function showLocations() {
     gsap.to(".location-point__city-name", { display: "block", duration: 0.1 });
   }
 }
-
+/**************/
+/** hide city locations at first screen when screen switch's **/
 function hideLocations() {
   gsap.to(".location-point", { display: "none", duration: 0.1 });
   gsap.to(".location-point__city-name", { display: "none", duration: 0.1 });
 }
-
+/**************/
+/** hide city location at second screen when screen switch's **/
 function hideDestinationPoins() {
   var timeline = gsap.timeline({ repeat: 0, repeatDelay: 0 });
   timeline.to(".destination-point", {
@@ -454,7 +470,8 @@ function hideDestinationPoins() {
     duration: 0.5,
   });
 }
-
+/**************/
+/** show city locations on second screen **/
 function showDestinationPoints() {
   var timeline = gsap.timeline({ repeat: 0, repeatDelay: 0 });
   timeline.to(".destination-point", {
@@ -468,7 +485,9 @@ function showDestinationPoints() {
     duration: 0.5,
   });
 }
+/**************/
 
+/** Hide flying plane when world map moves **/
 function hidePlane() {
   var timeline = gsap.timeline({ repeat: 0, repeatDelay: 0 });
   timeline.to(".flight-path-container", {
@@ -480,6 +499,8 @@ function hidePlane() {
     duration: 0.1,
   });
 }
+/**************/
+/** generate city locations over world map **/
 function LocationPoint(x, y, id, cityName) {
   this.x = x;
   this.y = y;
@@ -515,6 +536,8 @@ function LocationPoint(x, y, id, cityName) {
     _$(".world-map__destinations").appendChild(parentDiv);
   };
 }
+/**************/
+/** generate and show flying plane on two city location click **/
 function FlyingPlane(from, to) {
   this.from = from;
   this.to = to;
@@ -554,23 +577,25 @@ function FlyingPlane(from, to) {
     this.flying = false;
   };
 }
-
+/**************/
+/** destroy flying plane object from DOM **/
 function disapparePlane() {
   flightPath.setAttribute("d", "");
   _$(".flight-path-container").style.display = "none";
   plane.style.offsetPath = ``;
   plane.style.transform = "translateY(0px)";
   plane.style.display = "none";
-   
 }
-
+/**************/
+/** calculate two city location distance and shorten flight path curvature **/
 function calculateDistance(to, from) {
   var sqrY = Math.pow(to.y - from.y, 2);
   var sqrX = Math.pow(to.x - from.x, 2);
   var total = sqrY + sqrX;
   return Math.sqrt(total);
 }
-
+/**************/
+/** generate imaginary airport **/
 function Airport() {
   this.from = null;
   this.to = null;
@@ -592,7 +617,8 @@ function Airport() {
     // console.log("to", this.to);
   };
 }
-
+/**************/
+/** generate destination point **/
 function DestinationPoint(x, y, id, cityName) {
   this.x = x;
   this.y = y;
@@ -634,6 +660,8 @@ function DestinationPoint(x, y, id, cityName) {
     _$(".world-map__destinations__nuestros-destinos").appendChild(parentDiv);
   };
 }
+/**************/
+/** loader animation generate for second screen on hover of any city locations **/
 function createLoaderCircle(id) {
   var loaderDiv = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   loaderDiv.setAttributeNS(null, "viewBox", "0 0 300 300");
@@ -652,6 +680,7 @@ function createLoaderCircle(id) {
   loaderDiv.appendChild(circle);
   return loaderDiv;
 }
+/**************/
 //** Destination point hover functions **//
 function setListener(el) {
   el.addEventListener('mouseover', function(e) {
@@ -692,6 +721,7 @@ function hideLoaderAnimation(id) {
   }.bind(this), interval);
 }
 //*************************//
+/** Read JOSN file from assets **/
 function readTextFile(file, callback) {
   var rawFile = new XMLHttpRequest();
   rawFile.overrideMimeType("application/json");
@@ -703,6 +733,7 @@ function readTextFile(file, callback) {
   };
   rawFile.send(null);
 }
+/**************/
 readTextFile("Assets/data/SkyCanaXP-DataModel.json", function (text) {
   var data = JSON.parse(text);
   jsonData = JSON.parse(text);
@@ -737,7 +768,7 @@ readTextFile("Assets/data/SkyCanaXP-DataModel.json", function (text) {
     }
   });
 });
-
+/** generate popup div on hover of second screen city location with city image animation **/
 function populateCityPopUp(id) {
   let city_data = {};
   let images = [];
@@ -790,12 +821,10 @@ function populateCityPopUp(id) {
   });
   showSlides(1);
 }
-
+/**************/
 function sliderClick(i) {
   currentSlide(i);
 }
-
-let slideIndex = 1;
 
 function plusSlides(n) {
   showSlides((slideIndex += n));
@@ -804,7 +833,7 @@ function plusSlides(n) {
 function currentSlide(n) {
   showSlides((slideIndex = n));
 }
-
+/** third screen plane slider **/
 function showSlides(n) {
   let i;
   let slides = _$$(".city-data__img");
@@ -824,7 +853,8 @@ function showSlides(n) {
   slides[slideIndex - 1].style.display = "block";
   dots[slideIndex - 1].className += " active";
 }
-
+/**************/
+/** flying plane take off from a ciy locations **/
 function takeOff(e) {
   if (selected_option === "vuelos-shutter" && mapIsZommedIn) {
     airport.getFromAndToPoints(e);
@@ -836,6 +866,8 @@ function takeOff(e) {
     }
   }
 }
+/**************/
+/** change plane slides on mouse hover or click **/
 function onArrowClick(event) {
   if (event.target.id === "left" && active_plane > 1) {
     active_plane = Math.ceil(active_plane - 1);
@@ -890,6 +922,7 @@ function onArrowClick(event) {
     });
   }
 }
+/**************/
 const HomeScreenComponent = {
   template: /*html*/ `
     <div class="zoomed-in">
