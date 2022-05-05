@@ -127,15 +127,18 @@ emitter.on('mousehover', (event) => {
       e.target = {};
       e.target.id = 'left';
       onArrowClick(e);
+      break;
     }
     case 'right': {
       let e = {};
       e.target = {};
       e.target.id = 'right';
       onArrowClick(e);
+      break;
     }
     case 'plane': {
       gsap.to('.plane-name__pop-up', {display: 'block', autoAlpha: 1});
+      break;
     }
     default: {
       console.log("Wrong emitcontent!");
