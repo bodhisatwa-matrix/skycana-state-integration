@@ -38,6 +38,11 @@ const small_third_window_line = document.querySelector("#Line__3");
 var mainDiv = _$('.container');
 var timeOut = null;
 var previousKey = 0;
+var jsonData = {};
+var locations = [];
+var planes = [];
+var city_images = [];
+
 /** All events **/
 emitter.on('startApp', (event) => {
   document.body.style.cursor = "none";
@@ -408,7 +413,350 @@ function hidePlane() {
     duration: 0.1,
   });
 }
+function LocationPoint(x, y, id, cityName) {
+  this.x = x;
+  this.y = y;
+  this.id = id;
+  this.cityName = cityName;
 
+  //   render on dom
+  this.render = function () {
+    var parentDiv = document.createElement("div");
+    parentDiv.classList.add("location-point-parent");
+
+    var div = document.createElement("div");
+    div.classList.add("location-point");
+    div.setAttribute("onclick", "takeOff(event)");
+
+    var p = document.createElement("p");
+    var text = document.createTextNode(this.cityName);
+    p.classList.add("location-point__city-name");
+    p.appendChild(text);
+
+    parentDiv.appendChild(p);
+    parentDiv.style.zIndex = 999;
+
+    div.id = id;
+    div.style.left = this.x - 10 + "px";
+    div.style.top = this.y - 10 + "px";
+
+    p.id = id;
+    p.style.left = this.x + 20 + "px";
+    p.style.top = this.y - 10 + "px";
+
+    parentDiv.appendChild(div);
+    _$(".world-map__destinations").appendChild(parentDiv);
+  };
+}
+function FlyingPlane(from, to) {
+  this.from = from;
+  this.to = to;
+  this.planeElement = _$("#plane");
+  this.flightPathElement = _$(".flight-path");
+  this.flying = false;
+
+  this.fly = function () {
+    if (this.from && this.to) {
+      var distance = calculateDistance(this.to, this.from);
+      let rx = 100;
+      let ry = 90;
+      // if two points distance less then 200
+      if (distance < 200) {
+        rx = 30;
+        ry = 20;
+      }
+      flightPath.setAttribute(
+        "d",
+        // `M${from.x},${from.y} A100,90 0 1,1 ${to.x},${to.y}`
+        `M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}`
+      );
+      _$(".flight-path-container").style.display = "block";
+      // plane.style.offsetPath = `path('M${from.x},${from.y} A100,90 0 1,1 ${to.x},${to.y}')`;
+      plane.style.offsetPath = `path('M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}')`;
+      plane.style.transform = "translateY(-25px) scaleX(-1)";
+      plane.style.display = "block";
+      this.flying = true;
+    }
+  };
+  this.land = function () {
+    flightPath.setAttribute("d", "");
+    _$(".flight-path-container").style.display = "none";
+    plane.style.offsetPath = ``;
+    plane.style.transform = "translateY(0px)";
+    plane.style.display = "none";
+    this.flying = false;
+  };
+}
+
+function disapparePlane() {
+  flightPath.setAttribute("d", "");
+  _$(".flight-path-container").style.display = "none";
+  plane.style.offsetPath = ``;
+  plane.style.transform = "translateY(0px)";
+  plane.style.display = "none";
+   
+}
+
+function calculateDistance(to, from) {
+  var sqrY = Math.pow(to.y - from.y, 2);
+  var sqrX = Math.pow(to.x - from.x, 2);
+  var total = sqrY + sqrX;
+  return Math.sqrt(total);
+}
+
+function Airport() {
+  this.from = null;
+  this.to = null;
+  this.getFromAndToPoints = function (e) {
+    const { pageX, pageY } = e;
+    if ((!this.from && !this.to) || (this.from && this.to)) {
+      this.from = { x: pageX, y: pageY };
+      this.to = null;
+    } else if (this.from && !this.to) {
+      this.to = { x: pageX, y: pageY };
+    } else if (!this.from && this.to) {
+      this.from = { x: pageX, y: pageY };
+      this.to = null;
+    } else {
+      this.from = null;
+      this.to = null;
+    }
+    // console.log("from", this.from);
+    // console.log("to", this.to);
+  };
+}
+
+function DestinationPoint(x, y, id, cityName) {
+  this.x = x;
+  this.y = y;
+  this.id = id;
+  this.cityName = cityName;
+
+  this.render = function () {
+    var parentDiv = document.createElement("div");
+
+    var p = document.createElement("p");
+    var text = document.createTextNode(this.cityName);
+    p.classList.add("destination-point__city-name");
+    p.appendChild(text);
+
+    var img = document.createElement("img");
+    img.setAttribute("src", "./Assets/Images/destination-point.png");
+    img.classList.add("destination-point");
+    img.setAttribute("onclick", `populateCityPopUp(${this.id})`);
+
+    img.id = `des-${id}`;
+    img.style.left = this.x - 10 + "px";
+    img.style.top = this.y - 10 + "px";
+
+    p.id = `des-${id}`;
+    p.style.left = this.x - 5 + "px";
+    p.style.top = this.y + 25 + "px";
+
+    /** code for loader screen **/
+    var loader = createLoaderCircle(id);
+    loader.style.left = this.x - 15 + "px";
+    loader.style.top = this.y - 45 + "px";
+    parentDiv.insertAdjacentElement('afterend', img);
+    setListener(img);
+    parentDiv.appendChild(loader);
+    /** End here**/
+    parentDiv.appendChild(img);
+    parentDiv.appendChild(p);
+
+    _$(".world-map__destinations__nuestros-destinos").appendChild(parentDiv);
+  };
+}
+function createLoaderCircle(id) {
+  var loaderDiv = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  loaderDiv.setAttributeNS(null, "viewBox", "0 0 300 300");
+  loaderDiv.setAttributeNS(null, "preserveAspectRatio", "none");
+  loaderDiv.setAttributeNS(null, "style", "width:50; height:50; top:0; left:0; position: absolute;");
+  var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  circle.setAttributeNS(null, "cx", 100);
+  circle.setAttributeNS(null, "cy", 100);
+  circle.setAttributeNS(null, "r", 57);
+  circle.setAttributeNS(null, "class", id);
+  circle.setAttributeNS(null, "fill", "none");
+  circle.setAttributeNS(null, "stroke", "#e49a37");
+  circle.setAttributeNS(null, "stroke-width", 40);
+  circle.setAttributeNS(null, "stroke-dasharray", "0,20000");
+  circle.setAttributeNS(null, "transform", "rotate(-90,100,100)");
+  loaderDiv.appendChild(circle);
+  return loaderDiv;
+}
+//** Destination point hover functions **//
+function setListener(el) {
+  el.addEventListener('mouseover', function(e) {
+    loaderAnimation(e.target.id.slice(4));
+  });
+  el.addEventListener('mouseout', function(e) {
+    hideLoaderAnimation(e.target.id.slice(4));
+  });
+}
+function loaderAnimation(id) {
+  window.clearInterval(window.timer);
+  var circle = _$(`.${id}`);
+  var interval = 30;
+  var angle = 0;
+  var angle_increment = 6;
+  window.timer = window.setInterval(function() {
+    circle.setAttribute("stroke-dasharray", angle + ", 20000");
+        if (angle >= 360) {
+          window.clearInterval(window.timer);
+          populateCityPopUp(id);
+        }
+    angle += angle_increment;
+  }.bind(this), interval);
+}
+function hideLoaderAnimation(id) {
+  window.clearInterval(window.timer);
+  var circle = _$(`.${id}`);
+  var interval = 30;
+  var angle = 360;
+  var angle_increment = 6;
+  window.timer = window.setInterval(function() {
+    circle.setAttribute("stroke-dasharray", angle + ", 20000");
+    if (angle <= 0) {
+      window.clearInterval(window.timer);
+      gsap.to('.city-data__pop-up', { opacity: 0, display: "none" });
+    }
+    angle -= angle_increment;
+  }.bind(this), interval);
+}
+//*************************//
+function readTextFile(file, callback) {
+  var rawFile = new XMLHttpRequest();
+  rawFile.overrideMimeType("application/json");
+  rawFile.open("GET", file, true);
+  rawFile.onreadystatechange = function () {
+    if (rawFile.readyState === 4 && rawFile.status == "200") {
+      callback(rawFile.responseText);
+    }
+  };
+  rawFile.send(null);
+}
+readTextFile("Assets/data/SkyCanaXP-DataModel.json", function (text) {
+  var data = JSON.parse(text);
+  jsonData = JSON.parse(text);
+  // rendering locations in map related code here
+  jsonData.Locations.forEach((_l) => {
+    const location_point = new LocationPoint(_l.x, _l.y, _l.id, _l.name);
+    location_point.render();
+    const destination_point = new DestinationPoint(_l.x, _l.y, _l.id, _l.name);
+    destination_point.render();
+  });
+  Object.keys(data).forEach((key) => {
+    if (key == "Locations") {
+      if (Array.isArray(data["Locations"])) {
+        this.locations = data["Locations"];
+      } else {
+        console.log("Locations should be an array!");
+      }
+    } else if (key == "planes") {
+      if (Array.isArray(data["planes"])) {
+        this.planes = data["planes"];
+      } else {
+        console.log("planes should be an array!");
+      }
+    } else if (key == "image_urls") {
+      if (Array.isArray(data["image_urls"])) {
+        this.city_images = data["image_urls"];
+      } else {
+        console.log("image_urls should be an array!");
+      }
+    } else {
+      // console.log("no data found!")
+    }
+  });
+});
+
+function populateCityPopUp(id) {
+  let city_data = {};
+  let images = [];
+  let data = jsonData;
+  city_data = {
+    name: data["city-name"],
+    code: data["city-code"],
+  };
+  Object.keys(jsonData).forEach((key) => {
+    if (key == "image_urls") {
+      if (data[key].length) {
+        if (data["image_urls"]) {
+          for (const img of data["image_urls"]) {
+            let image = {
+              url: img.image,
+            };
+            images.push(image);
+          }
+        }
+      }
+    }
+  });
+  var slider_dot = _$(".slider-dot");
+  var img__slider = _$(".img__slider");
+  slider_dot.setAttribute("style", "text-align:center");
+  let j = 1;
+  for (const i of images) {
+    var span = document.createElement("span");
+    var city_data_img = document.createElement("div");
+    city_data_img.setAttribute("class", "city-data__img fade");
+    var img = document.createElement("img");
+    img.src = i.url;
+    img.setAttribute("class", "slider__img");
+    city_data_img.append(img);
+    span.setAttribute("class", "dot");
+    if (j == 1) {
+      span.setAttribute("class", "dot active");
+    }
+    span.addEventListener("onclick", function () {
+      sliderClick(j);
+    });
+    slider_dot.append(span);
+    img__slider.append(city_data_img);
+    j++;
+  }
+  gsap.to(".city-data__pop-up", {
+    ease: "none",
+    autoAlpha: 1,
+    display: "block",
+  });
+  showSlides(1);
+}
+
+function sliderClick(i) {
+  currentSlide(i);
+}
+
+let slideIndex = 1;
+
+function plusSlides(n) {
+  showSlides((slideIndex += n));
+}
+
+function currentSlide(n) {
+  showSlides((slideIndex = n));
+}
+
+function showSlides(n) {
+  let i;
+  let slides = _$(".city-data__img");
+  let dots = _$(".dot");
+  if (n > slides.length) {
+    slideIndex = 1;
+  }
+  if (n < 1) {
+    slideIndex = slides.length;
+  }
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex - 1].style.display = "block";
+  dots[slideIndex - 1].className += " active";
+}
 const HomeScreenComponent = {
   template: /*html*/ `
     <div class="zoomed-in">
