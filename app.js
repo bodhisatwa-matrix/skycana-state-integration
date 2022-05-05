@@ -1,6 +1,7 @@
 const emitter = mitt();
 var whichWindow = "big";
 var _$ = document.querySelector.bind(document);
+var _$$ = document.querySelectorAll.bind(document);
 let selected_option = "";
 let mapIsZommedIn = false;
 
@@ -42,6 +43,8 @@ var jsonData = {};
 var locations = [];
 var planes = [];
 var city_images = [];
+var airport = new Airport();
+var active_plane = 1;
 
 /** All events **/
 emitter.on('startApp', (event) => {
@@ -50,19 +53,20 @@ emitter.on('startApp', (event) => {
 });
 
 emitter.on('keydown', (event) => {
-  console.log(event.emitContent, previousKey, whichWindow)
-  if(event.emitContent == previousKey && whichWindow != "small") {
-    console.log("please  call 1")
-    stopAnimation(whichWindow);
-    previousKey = 0;
-  } else if(event.emitContent == previousKey && whichWindow == "small") {
-    console.log("please  call 2")
-    backToHome();
+  if (typeof event.emitContent == "number") {
+    if (event.emitContent == previousKey && whichWindow != "small") {
+      stopAnimation(whichWindow);
+      previousKey = 0;
+    } else if (event.emitContent == previousKey && whichWindow == "small") {
+      backToHome();
+    } else {
+      stopAnimation(whichWindow);
+      startAnimation(event.emitContent, event.window);
+      previousKey = event.emitContent;
+    }
   } else {
-    console.log("please  call 3")
-    stopAnimation(whichWindow);
-    startAnimation(event.emitContent, event.window);
-    previousKey = event.emitContent;
+    // navigation key event
+    hidePlane();
   }
 });
 
@@ -91,6 +95,67 @@ emitter.on('animationended', (event) => {
     }
     default: {
       console.log("unknown animation ended!");
+      break;
+    }
+  }
+});
+
+emitter.on('mousehover', (event) => {
+  switch(event.emitContent) {
+    case 1: {
+      gsap.to(".asienton_pop_up", { opacity: 1, autoAlpha: 1 });
+      break;
+    }
+    case 2: {
+      gsap.to(".rango_de_vuelo_pop_up", { opacity: 1, autoAlpha: 1 });
+      break;
+    }
+    case 3: {
+      gsap.to(".metros_de_largo_pop_up", { opacity: 1, autoAlpha: 1 });
+      break;
+    }
+    case 4: {
+      gsap.to(".de_capacided_pop_up", { opacity: 1, autoAlpha: 1 });
+      break;
+    }
+    case 'left': {
+      let e = {};
+      e.target = {};
+      e.target.id = 'left';
+      onArrowClick(e);
+    }
+    case 'right': {
+      let e = {};
+      e.target = {};
+      e.target.id = 'right';
+      onArrowClick(e);
+    }
+    default: {
+      console.log("Wrong emitcontent!");
+      break;
+    }
+  }
+});
+emitter.on('mouseout', (event) => {
+  switch(event.emitContent) {
+    case 1: {
+      gsap.to(".asienton_pop_up", { opacity: 0, autoAlpha: 0, duration: 1 });
+      break;
+    }
+    case 2: {
+      gsap.to(".rango_de_vuelo_pop_up", { opacity: 0, autoAlpha: 0, duration: 1 });
+      break;
+    }
+    case 3: {
+      gsap.to(".metros_de_largo_pop_up", { opacity: 0, autoAlpha: 0, duration: 1 });
+      break;
+    }
+    case 4: {
+      gsap.to(".de_capacided_pop_up", { opacity: 0, autoAlpha: 0, duration: 1 });
+      break;
+    }
+    default: {
+      console.log("Wrong emitcontent!");
       break;
     }
   }
@@ -740,8 +805,8 @@ function currentSlide(n) {
 
 function showSlides(n) {
   let i;
-  let slides = _$(".city-data__img");
-  let dots = _$(".dot");
+  let slides = _$$(".city-data__img");
+  let dots = _$$(".dot");
   if (n > slides.length) {
     slideIndex = 1;
   }
@@ -756,6 +821,72 @@ function showSlides(n) {
   }
   slides[slideIndex - 1].style.display = "block";
   dots[slideIndex - 1].className += " active";
+}
+
+function takeOff(e) {
+  if (selected_option === "vuelos-shutter" && mapIsZommedIn) {
+    airport.getFromAndToPoints(e);
+    const plane = new FlyingPlane(airport.from, airport.to);
+    if (airport.from && airport.to) {
+      plane.fly();
+    } else {
+      plane.land();
+    }
+  }
+}
+function onArrowClick(event) {
+  if (event.target.id === "left" && active_plane > 1) {
+    active_plane = Math.ceil(active_plane - 1);
+  }
+  if (event.target.id === "right" && active_plane < 5) {
+    active_plane = Math.ceil(active_plane + 1);
+  }
+  const fromProps = {
+    opacity: 0.5,
+  };
+  const toProps = {
+    attr: {
+      src: `./Assets/Images/Planes/0${active_plane}.png`,
+    },
+    opacity: 1,
+    duration: 0.005,
+  };
+  gsap.from(
+    ".nuestra-flota__all-planes__plane-slider__single-plane",
+    fromProps
+  );
+  gsap.to(".nuestra-flota__all-planes__plane-slider__single-plane", toProps);
+
+  if (active_plane > 2 && event.target.id === "right") {
+    gsap.to(".nuestra-flota__all-planes__plane-slider", {
+      top: "34%",
+      duration: 0.01,
+      ease: Circ.easeOut,
+    });
+  }
+  if (active_plane < 3 && event.target.id === "left") {
+    gsap.to(".nuestra-flota__all-planes__plane-slider", {
+      top: "32%",
+      duration: 0.01,
+      ease: Circ.easeOut,
+    });
+  }
+  if (active_plane > 4 && event.target.id === "right") {
+    gsap.to(".nuestra-flota__all-planes__plane-slider", {
+      rotation: -4,
+      duration: 0.01,
+      ease: Circ.easeOut,
+      top: "36%",
+    });
+  }
+  if (active_plane < 5 && event.target.id === "left") {
+    gsap.to(".nuestra-flota__all-planes__plane-slider", {
+      rotation: 0,
+      duration: 0.01,
+      ease: Circ.easeOut,
+      top: "33%",
+    });
+  }
 }
 const HomeScreenComponent = {
   template: /*html*/ `
@@ -832,6 +963,22 @@ const app = Vue.createApp({
         }
         case "3": {
           this.emitter.emit("keydown", { emitContent: 3, "window": whichWindow });
+          break;
+        }
+        case "ArrowUp": {
+          this.emitter.emit("keydown", { emitContent: "ArrowUp", "window": whichWindow });
+          break;
+        }
+        case "ArrowDown": {
+          this.emitter.emit("keydown", { emitContent: "ArrowDown", "window": whichWindow });
+          break;
+        }
+        case "ArrowLeft": {
+          this.emitter.emit("keydown", { emitContent: "ArrowLeft", "window": whichWindow });
+          break;
+        }
+        case "ArrowRight": {
+          this.emitter.emit("keydown", { emitContent: "ArrowRight", "window": whichWindow });
           break;
         }
         default: {
@@ -1623,10 +1770,10 @@ const planeScreen = Vue.createApp({
 
   <div class="nuestra-flota__all-planes">
     <div class="nuestra-flota__plus-buttons">
-      <img src="./Assets/Images/plus-icon.png" class="nuestra-flota__plus-buttons__one" id="one">
-      <img src="./Assets/Images/plus-icon.png" class="nuestra-flota__plus-buttons__two" id="two">
-      <img src="./Assets/Images/plus-icon.png" class="nuestra-flota__plus-buttons__three" id="three">
-      <img src="./Assets/Images/plus-icon.png" class="nuestra-flota__plus-buttons__four" id="four">
+      <img src="./Assets/Images/plus-icon.png" class="nuestra-flota__plus-buttons__one" id="one" @mouseover="showDialog(1)" @mouseout="hideDialog(1)">
+      <img src="./Assets/Images/plus-icon.png" class="nuestra-flota__plus-buttons__two" id="two" @mouseover="showDialog(2)" @mouseout="hideDialog(2)">
+      <img src="./Assets/Images/plus-icon.png" class="nuestra-flota__plus-buttons__three" id="three" @mouseover="showDialog(3)" @mouseout="hideDialog(3)">
+      <img src="./Assets/Images/plus-icon.png" class="nuestra-flota__plus-buttons__four" id="four" @mouseover="showDialog(4)" @mouseout="hideDialog(4)">
     </div>
     <div class="nuestra-flota__plus-icon-popups">
       <!-- displays remaminng seats -->
@@ -1636,8 +1783,8 @@ const planeScreen = Vue.createApp({
       </div>
     </div>
     <div class="nuestra-flota__slide-arrows">
-      <img src="./Assets/Images/left arrow.png" alt="" class="nuestra-flota__left-arrow" id="left">
-      <img src="./Assets/Images/right arrow.png" alt="" class="nuestra-flota__right-arrow" id="right">
+      <img src="./Assets/Images/left arrow.png" alt="" class="nuestra-flota__left-arrow" id="left" @mouseover="gotoNextPlane('left')">
+      <img src="./Assets/Images/right arrow.png" alt="" class="nuestra-flota__right-arrow" id="right" @mouseover="gotoNextPlane('right')">
     </div>
     <div class="nuestra-flota__clouds">
       <img src="./Assets/Images/clouds_01.png" class="nuestra-flota__clouds__top" alt="" />
@@ -1685,7 +1832,18 @@ const planeScreen = Vue.createApp({
     </div>
   </div>
 </div>
-  `
+  `,
+  methods: {
+    showDialog(e) {
+      this.emitter.emit("mousehover",{"emitContent": e});
+    },
+    hideDialog(e) {
+      this.emitter.emit("mouseout",{"emitContent": e});
+    },
+    gotoNextPlane(e) {
+      this.emitter.emit("mousehover",{"emitContent": e});
+    }
+  }
 });
 planeScreen.config.globalProperties.emitter = emitter;
 planeScreen.mount('#plane-screen');
