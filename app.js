@@ -46,6 +46,9 @@ var city_images = [];
 var airport = new Airport();
 var active_plane = 1;
 let slideIndex = 1;
+var initialScale = 0.3;
+var currentScale = 0.3;
+var endScale = 10.0;
 
 /** All events **/
 emitter.on('startApp', (event) => {
@@ -172,6 +175,7 @@ function backToHome() {
     previousKey = 0;
     hideLocations();
     hideDestinationPoins();
+    hidePlane();
     gsap.to(".world-map", { opacity: 0, display: "none", duration: 0.3 });
     gsap.to(".nuestra-flota", { opacity: 0, display: "none", duration: 0.3 });
     _$(".zoomed-in").style.display = "block";
@@ -428,11 +432,11 @@ function autoZoom(width) {
   var timeline = gsap.timeline({delay: 1});
   timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
   _$("#Map").style.transform = `scale(2.0)`;
-  if(width == 0) {
-    _$("#Map").style.transformOrigin = "755px 1100px";
+  _$("#Map").style.transformOrigin = "400px 660px";
+  /*if(width == 0) {
   } else {
     _$("#Map").style.transformOrigin = "400px 660px";
-  }
+  }*/
 }
 /**************/
 /** show city locations on first screen **/
