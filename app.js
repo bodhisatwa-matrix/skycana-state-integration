@@ -6,7 +6,7 @@ let selected_option = "";
 let mapIsZommedIn = false;
 
 const body = _$("body");
-const flightPath = document.querySelector(".flight-path");
+const flightPath = _$(".flight-path");
 const plane = document.querySelector("#plane");
 
 const window_shutters = document.querySelectorAll(".window-shutter");
@@ -52,8 +52,7 @@ var endScale = 10.0;
 
 /** All events **/
 emitter.on('startApp', (event) => {
-  document.body.style.cursor = "none";
-  
+  document.body.style.cursor = "none";  
 });
 
 emitter.on('keydown', (event) => {
@@ -105,6 +104,7 @@ emitter.on('animationended', (event) => {
 });
 
 emitter.on('mousehover', (event) => {
+  console.log(event.emitContent)
   switch(event.emitContent) {
     case 1: {
       gsap.to(".asienton_pop_up", { opacity: 1, autoAlpha: 1 });
@@ -134,6 +134,9 @@ emitter.on('mousehover', (event) => {
       e.target.id = 'right';
       onArrowClick(e);
     }
+    case 'plane': {
+      gsap.to('.plane-name__pop-up', {display: 'block', autoAlpha: 1});
+    }
     default: {
       console.log("Wrong emitcontent!");
       break;
@@ -158,6 +161,9 @@ emitter.on('mouseout', (event) => {
       gsap.to(".de_capacided_pop_up", { opacity: 0, autoAlpha: 0, duration: 1 });
       break;
     }
+    case 'plane': {
+      gsap.to('.plane-name__pop-up', {display: 'none', autoAlpha: 0, duration: 2});
+    }
     default: {
       console.log("Wrong emitcontent!");
       break;
@@ -176,11 +182,12 @@ function backToHome() {
     hideLocations();
     hideDestinationPoins();
     hidePlane();
-    gsap.to(".world-map", { opacity: 0, display: "none", duration: 0.3 });
-    gsap.to(".nuestra-flota", { opacity: 0, display: "none", duration: 0.3 });
+    gsap.to(".world-map", { opacity: 0, display: "none", duration: 0.01 });
+    gsap.to(".nuestra-flota", { opacity: 0, display: "none", duration: 0.01 });
     _$(".zoomed-in").style.display = "block";
     mapIsZommedIn = false;
     whichWindow = "big";
+    document.body.style.cursor = "none";
   }, 2000); // return to start page after 2sec.
 }
 /** all window start animation **/
@@ -257,6 +264,7 @@ function stopAnimation(window) {
 /**************/
 /** open sepecific screen after animation complete or switch screen **/
 function openWindow(which) {
+  document.body.style.cursor = "pointer"
   if(whichWindow == "big") {
     switch (which) {
       case 1: {
@@ -496,11 +504,11 @@ function hidePlane() {
   var timeline = gsap.timeline({ repeat: 0, repeatDelay: 0 });
   timeline.to(".flight-path-container", {
     display: "none",
-    duration: 0.1,
+    duration: 0.01,
   });
   timeline.to("#plane", {
     display: "none",
-    duration: 0.1,
+    duration: 0.01,
   });
 }
 /**************/
@@ -720,6 +728,10 @@ function hideLoaderAnimation(id) {
     if (angle <= 0) {
       window.clearInterval(window.timer);
       gsap.to('.city-data__pop-up', { opacity: 0, display: "none" });
+      var slider_dot = _$(".slider-dot");
+      var img__slider = _$$("img__slider")[0];
+      slider_dot.innerHTML = "";
+      img__slider.innerHTML = "";
     }
     angle -= angle_increment;
   }.bind(this), interval);
@@ -1093,7 +1105,7 @@ const window1 = Vue.createApp({
     </div>
     `,
   methods: {
-   
+    
   },
   mounted() {
     
@@ -1887,3 +1899,26 @@ const planeScreen = Vue.createApp({
 planeScreen.config.globalProperties.emitter = emitter;
 planeScreen.mount('#plane-screen');
 /** Plane Screen Vue App End **/
+
+_$("#plane").addEventListener('mouseover', (e) => {
+  emitter.emit("mousehover",{"emitContent": e.target.id});
+});
+_$("#plane").addEventListener('mouseout', (e) => {
+  emitter.emit("mouseout",{"emitContent": e.target.id});
+});
+/*const flyingPlane = Vue.createApp({
+  name: 'FlyingPlane',
+  template: `<div class="flying-plane">
+  <svg class="flight-path-container">
+    <path class="flight-path" d="" />
+  </svg>
+  <img src="./Assets/Images/Planes/01.png" alt="" style="width: 100px;" id="plane" @mouseover="showFlyingPlaneInfo">
+</div>`,
+  methods: {
+   showFlyingPlaneInfo(e) {
+    this.emitter.emit("mousehover",{"emitContent": e});
+   } 
+  }
+});
+flyingPlane.config.globalProperties.emitter = emitter;
+flyingPlane.mount('#flying-plane');*/
