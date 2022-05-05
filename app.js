@@ -164,17 +164,19 @@ emitter.on('mouseout', (event) => {
 
 /***** General Functions *****/
 function backToHome() {
-  stopAnimation("big");
-  selected_option = "";
-  previousKey = 0;
-  hideLocations();
-  hideDestinationPoins();
-  gsap.to(".world-map", { opacity: 0, display: "none", duration: 1 });
-  gsap.to(".nuestra-flota", { opacity: 0, display: "none", duration: 1 });
-  _$(".zoomed-in").style.display = "block";
-  mapIsZommedIn = false;
-  whichWindow = "big";
   stopAnimation("small");
+  stopAnimation("big");
+  setTimeout(() => {
+    selected_option = "";
+    previousKey = 0;
+    hideLocations();
+    hideDestinationPoins();
+    gsap.to(".world-map", { opacity: 0, display: "none", duration: 0.3 });
+    gsap.to(".nuestra-flota", { opacity: 0, display: "none", duration: 0.3 });
+    _$(".zoomed-in").style.display = "block";
+    mapIsZommedIn = false;
+    whichWindow = "big";
+  }, 2000);
 }
 
 function startAnimation(which, window) {
