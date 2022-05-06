@@ -347,7 +347,7 @@ function firstScreen() {
       gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 0, display: "none", duration: 1, autoAlpha: 0 });
       hideDestinationPoins();
       showLocations();
-      takeOff('e');
+      // takeOff('e');
     }, 2000);
   } else {
     gsap.to('#Map', {opacity: 1, display: "block", duration: 1});
@@ -361,7 +361,7 @@ function firstScreen() {
     gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 0, display: "none", duration: 1, autoAlpha: 0 });
     hideDestinationPoins();
     showLocations();
-    takeOff('e');
+    // takeOff('e');
   }
 }
 /**************/
@@ -541,7 +541,7 @@ function LocationPoint(x, y, id, cityName) {
 
     var div = document.createElement("div");
     div.classList.add("location-point");
-    // div.setAttribute("onclick", "takeOff(event)");
+    div.setAttribute("onclick", "takeOff(event)");
     // div.setAttribute("ondblclick", "disableDBLClick(event)");
 
     var p = document.createElement("p");
@@ -932,7 +932,7 @@ function showSlides(n) {
 function takeOff(e) {
   // cons
   if (selected_option === "vuelos-shutter" && mapIsZommedIn) {
-    var planeData = jsonData["planes"];
+    /*var planeData = jsonData["planes"];
     var cityData = jsonData["Locations"];
     for (const i of planeData) {
       let data1 = cityData.find(o => o.id == i.from);
@@ -952,16 +952,16 @@ function takeOff(e) {
         plane.land();  
       }
       // console.log(from ,to);
-    }
-    //airport.getFromAndToPoints(e);
-    // const plane = new FlyingPlane(airport.from, airport.to);
+    }*/
+    airport.getFromAndToPoints(e);
+    const plane = new FlyingPlane(airport.from, airport.to);
     // const plane2 = new FlyingPlane(airport.from, airport.to);
     // const plane3 = new FlyingPlane(airport.from, airport.to);
-    /*if (airport.from && airport.to) {
+    if (airport.from && airport.to) {
       plane.fly();
     } else {
       plane.land();
-    }*/
+    }
   } else {
     console.log("hi");
   }
