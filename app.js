@@ -771,6 +771,16 @@ function hideLoaderAnimation(id) {
     angle -= angle_increment;
   }.bind(this), interval);
 }
+function closePopup() {
+  setTimeout(() => {
+    var popup = _$(".city-data__pop-up");
+    var slider_dot = _$(".slider-dot");
+    var img__slider = _$$(".img__slider");
+    popup.style.display = "none";
+    slider_dot.innerHTML = "";
+    img__slider.innerHTML = "";
+  }, 1000);
+}
 //*************************//
 /** Read JOSN file from assets **/
 function readTextFile(file, callback) {
@@ -872,7 +882,7 @@ function populateCityPopUp(id) {
     if (j == 1) {
       span.setAttribute("class", "dot active");
     }
-    span.addEventListener("onclick", function () {
+    span.addEventListener("mouseover", function () {
       sliderClick(j);
     });
     slider_dot.append(span);

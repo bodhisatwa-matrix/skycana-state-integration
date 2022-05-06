@@ -93,7 +93,9 @@ body {
   overflow: hidden;
   height: 100vh;
 }
-
+#win1para1, #win2para2, #win3para3 {
+  cursor: none;
+}
 .window-shutter {
   /* width: 394px;
   top: 0;
