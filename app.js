@@ -772,14 +772,13 @@ function hideLoaderAnimation(id) {
   }.bind(this), interval);
 }
 function closePopup() {
-  setTimeout(() => {
-    var popup = _$(".city-data__pop-up");
-    var slider_dot = _$(".slider-dot");
-    var img__slider = _$$(".img__slider");
-    popup.style.display = "none";
-    slider_dot.innerHTML = "";
-    img__slider.innerHTML = "";
-  }, 1000);
+  var slider_dot = _$(".slider-dot");
+  var img__slider = _$$(".img__slider");
+  slider_dot.innerHTML = "";
+  img__slider.innerHTML = "";
+  gsap.to('.city-data__pop-up', {display: "none", opacity: 0, duration: 2});
+  // setTimeout(() => {
+  // }, 1000);
 }
 //*************************//
 /** Read JOSN file from assets **/
