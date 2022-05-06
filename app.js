@@ -530,6 +530,7 @@ function LocationPoint(x, y, id, cityName) {
     var div = document.createElement("div");
     div.classList.add("location-point");
     div.setAttribute("onclick", "takeOff(event)");
+    div.setAttribute("ondblclick", "disableDBLClick(event)");
 
     var p = document.createElement("p");
     var text = document.createTextNode(this.cityName);
@@ -550,6 +551,11 @@ function LocationPoint(x, y, id, cityName) {
     parentDiv.appendChild(div);
     _$(".world-map__destinations").appendChild(parentDiv);
   };
+}
+function disableDBLClick(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  return;
 }
 /**************/
 /** generate and show flying plane on two city location click **/
@@ -628,8 +634,8 @@ function Airport() {
       this.from = null;
       this.to = null;
     }
-    // console.log("from", this.from);
-    // console.log("to", this.to);
+    console.log("from", this.from);
+    console.log("to", this.to);
   };
 }
 /**************/
@@ -1111,7 +1117,7 @@ const window1 = Vue.createApp({
     
   },
   mounted() {
-    
+
   }
 });
 window1.config.globalProperties.emitter = emitter;
@@ -1909,6 +1915,10 @@ _$("#plane").addEventListener('mouseover', (e) => {
 _$("#plane").addEventListener('mouseout', (e) => {
   emitter.emit("mouseout",{"emitContent": e.target.id});
 });
+// _$('#plane').addEventListener('transitionend', () => {
+//   plane.style.transform = "transition(rotate(86deg))";
+// });
+
 /*const flyingPlane = Vue.createApp({
   name: 'FlyingPlane',
   template: `<div class="flying-plane">
