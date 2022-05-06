@@ -91,6 +91,7 @@ body {
   color: white;
   cursor: url("./Assets/Images/icon_walking_40.png"), auto;
   overflow: hidden;
+  height: 100vh;
 }
 
 .window-shutter {

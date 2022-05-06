@@ -703,19 +703,25 @@ function createLoaderCircle(id) {
 }
 /**************/
 //** Destination point hover functions **//
+var l;
+var angle = 0;
 function setListener(el) {
   el.addEventListener('mouseover', function(e) {
+    l = e.target.id.slice(4);
+    _$(`.${l}`).style.display = "block";
+    angle = 0;
     loaderAnimation(e.target.id.slice(4));
   });
   el.addEventListener('mouseout', function(e) {
+    _$(`.${l}`).style.display = "none";
     hideLoaderAnimation(e.target.id.slice(4));
   });
 }
+
 function loaderAnimation(id) {
   window.clearInterval(window.timer);
   var circle = _$(`.${id}`);
   var interval = 30;
-  var angle = 0;
   var angle_increment = 6;
   window.timer = window.setInterval(function() {
     circle.setAttribute("stroke-dasharray", angle + ", 20000");
@@ -730,7 +736,7 @@ function hideLoaderAnimation(id) {
   window.clearInterval(window.timer);
   var circle = _$(`.${id}`);
   var interval = 30;
-  var angle = 360;
+  // var angle = 360;
   var angle_increment = 6;
   window.timer = window.setInterval(function() {
     circle.setAttribute("stroke-dasharray", angle + ", 20000");
@@ -738,7 +744,7 @@ function hideLoaderAnimation(id) {
       window.clearInterval(window.timer);
       gsap.to('.city-data__pop-up', { opacity: 0, display: "none" });
       var slider_dot = _$(".slider-dot");
-      var img__slider = _$$("img__slider")[0];
+      var img__slider = _$$(".img__slider");
       slider_dot.innerHTML = "";
       img__slider.innerHTML = "";
     }
@@ -795,15 +801,22 @@ readTextFile("Assets/data/SkyCanaXP-DataModel.json", function (text) {
 });
 /** generate popup div on hover of second screen city location with city image animation **/
 function populateCityPopUp(id) {
+  var date = new Date();
   let city_data = {};
-  let images = [];
-  let data = jsonData;
-  city_data = {
-    name: data["city-name"],
-    code: data["city-code"],
-  };
+  // let images = [];
+  // let data = jsonData;
+  let cityData = [];
+
+  // city_data = {
+  //   name: data["city-name"],
+  //   code: data["city-code"],
+  // };
   Object.keys(jsonData).forEach((key) => {
-    if (key == "image_urls") {
+    if(key == "Locations") {
+      cityData = jsonData[key];
+    }
+
+    /*if (key == "image_urls") {
       if (data[key].length) {
         if (data["image_urls"]) {
           for (const img of data["image_urls"]) {
@@ -814,18 +827,25 @@ function populateCityPopUp(id) {
           }
         }
       }
-    }
+    }*/
   });
+  city_data = cityData.find(o => o.id == id);
+  
+  _$('.city_name').innerHTML = city_data.name;
+  _$('.time').innerHTML = date.toLocaleTimeString().slice(0, 5);
+  _$('.city__description').innerHTML = city_data.description;
   var slider_dot = _$(".slider-dot");
   var img__slider = _$(".img__slider");
+  img__slider.innerHTML = "";
   slider_dot.setAttribute("style", "text-align:center");
   let j = 1;
-  for (const i of images) {
+  for (const i of city_data.picts) {
     var span = document.createElement("span");
     var city_data_img = document.createElement("div");
     city_data_img.setAttribute("class", "city-data__img fade");
     var img = document.createElement("img");
-    img.src = i.url;
+    // img.src = i.url;
+    img.src = i;
     img.setAttribute("class", "slider__img");
     city_data_img.append(img);
     span.setAttribute("class", "dot");
