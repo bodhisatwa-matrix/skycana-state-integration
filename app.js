@@ -188,6 +188,11 @@ function backToHome() {
     gsap.to(".world-map", { opacity: 0, display: "none", duration: 0.01 });
     gsap.to(".nuestra-flota", { opacity: 0, display: "none", duration: 0.01 });
     _$(".zoomed-in").style.display = "block";
+    _$("#Map").style.transform = null;
+    _$("#Map").style.transformOrigin = null;
+    _$("#Map").style.opacity = null;
+    _$("#Map").style.display = null;
+    _$("#Map").style.visibility = null;
     mapIsZommedIn = false;
     whichWindow = "big";
     document.body.style.cursor = "none";
@@ -342,6 +347,7 @@ function firstScreen() {
       gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 0, display: "none", duration: 1, autoAlpha: 0 });
       hideDestinationPoins();
       showLocations();
+      takeOff('e');
     }, 2000);
   } else {
     gsap.to('#Map', {opacity: 1, display: "block", duration: 1});
@@ -355,6 +361,7 @@ function firstScreen() {
     gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 0, display: "none", duration: 1, autoAlpha: 0 });
     hideDestinationPoins();
     showLocations();
+    takeOff('e');
   }
 }
 /**************/
@@ -406,7 +413,8 @@ function thirdScreen() {
   selected_option = "flota-shutter";
   _$(".zoomed-in").style.display = "none";
   _$(".world-map__heading").innerHTML = "Nuestra flota";
-  gsap.to('#Map', {opacity: 0, display: "none", duration: 0.1});
+  // gsap.to('#Map', {opacity: 0, display: "none", duration: 0.1});
+  _$("#Map").style.visibility = "hidden";
   _$("#Rectangle__3").setAttribute("height", "58.208");
   _$("#Line__3").setAttribute("transform","translate(68.867 24.178)");
   hideLocations();
@@ -426,22 +434,26 @@ function mapZoomIn () {
 /**************/
 /** after zoomin world map set to center **/
 function setMapToCenter() {
+    console.log(_$("#Map").getBoundingClientRect());
   _$('.container').setAttribute("tabindex", 1);
   _$('.container').focus();
-  _$('.container').scrollLeft = (_$("#Map").getBoundingClientRect().width, _$('.container').getBoundingClientRect().width) / 2;
-  _$('.container').scrollTop = (_$("#Map").getBoundingClientRect().height, _$('.container').getBoundingClientRect().height) / 2;
+  // _$('.container').scrollLeft = (_$("#Map").getBoundingClientRect().width, _$('.container').getBoundingClientRect().width) / 2;
+  // _$('.container').scrollTop = (_$("#Map").getBoundingClientRect().height, _$('.container').getBoundingClientRect().height) / 2;
+  _$('.container').scrollLeft = (3081, _$('.container').getBoundingClientRect().width) / 2;
+  _$('.container').scrollTop = (1564, _$('.container').getBoundingClientRect().height) / 2;
   var {width} = document.body.getBoundingClientRect();
   if(width > 1365) {
     initialScale = 1.0;
     currentScale = 1.0;
   }
-  autoZoom(_$("#Map").getBoundingClientRect().width);
+  autoZoom();
 }
 /**************/
 /** auto zoom **/
-function autoZoom(width) {
+function autoZoom() {
   var timeline = gsap.timeline({delay: 1});
   timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
+  _$("#Map").style.visibility = "visible";
   _$("#Map").style.transform = `scale(2.0)`;
   _$("#Map").style.transformOrigin = "400px 660px";
   /*if(width == 0) {
@@ -529,8 +541,8 @@ function LocationPoint(x, y, id, cityName) {
 
     var div = document.createElement("div");
     div.classList.add("location-point");
-    div.setAttribute("onclick", "takeOff(event)");
-    div.setAttribute("ondblclick", "disableDBLClick(event)");
+    // div.setAttribute("onclick", "takeOff(event)");
+    // div.setAttribute("ondblclick", "disableDBLClick(event)");
 
     var p = document.createElement("p");
     var text = document.createTextNode(this.cityName);
@@ -560,6 +572,7 @@ function disableDBLClick(e) {
 /**************/
 /** generate and show flying plane on two city location click **/
 function FlyingPlane(from, to) {
+  
   this.from = from;
   this.to = to;
   this.planeElement = _$("#plane");
@@ -707,14 +720,24 @@ var l;
 var angle = 0;
 function setListener(el) {
   el.addEventListener('mouseover', function(e) {
+    var popup = _$(".city-data__pop-up");
+    var slider_dot = _$(".slider-dot");
+    var img__slider = _$$(".img__slider");
+    popup.style.display = "none";
+    slider_dot.innerHTML = "";
+    img__slider.innerHTML = "";
     l = e.target.id.slice(4);
     _$(`.${l}`).style.display = "block";
     angle = 0;
+    hideLoaderAnimation(e.target.id.slice(4));
     loaderAnimation(e.target.id.slice(4));
   });
   el.addEventListener('mouseout', function(e) {
-    _$(`.${l}`).style.display = "none";
-    hideLoaderAnimation(e.target.id.slice(4));
+    var popup = _$(".city-data__pop-up");
+    if(popup.style.display == "none") {
+      _$(`.${l}`).style.display = "none";
+      hideLoaderAnimation(e.target.id.slice(4));
+    }
   });
 }
 
@@ -728,6 +751,7 @@ function loaderAnimation(id) {
         if (angle >= 360) {
           window.clearInterval(window.timer);
           populateCityPopUp(id);
+          _$(`.${l}`).style.display = "none";
         }
     angle += angle_increment;
   }.bind(this), interval);
@@ -743,10 +767,6 @@ function hideLoaderAnimation(id) {
     if (angle <= 0) {
       window.clearInterval(window.timer);
       gsap.to('.city-data__pop-up', { opacity: 0, display: "none" });
-      var slider_dot = _$(".slider-dot");
-      var img__slider = _$$(".img__slider");
-      slider_dot.innerHTML = "";
-      img__slider.innerHTML = "";
     }
     angle -= angle_increment;
   }.bind(this), interval);
@@ -901,14 +921,40 @@ function showSlides(n) {
 /**************/
 /** flying plane take off from a ciy locations **/
 function takeOff(e) {
+  // cons
   if (selected_option === "vuelos-shutter" && mapIsZommedIn) {
-    airport.getFromAndToPoints(e);
-    const plane = new FlyingPlane(airport.from, airport.to);
-    if (airport.from && airport.to) {
+    var planeData = jsonData["planes"];
+    var cityData = jsonData["Locations"];
+    for (const i of planeData) {
+      let data1 = cityData.find(o => o.id == i.from);
+      let from = {} 
+      from.x = data1.x;
+      from.y = data1.y;
+      let data2 = cityData.find(o => o.id == i.to);
+      let to = {};
+      to.x = data2?.x;
+      to.y = data2?.y;
+      airport.from = from;
+      airport.to = to;
+      let plane = new FlyingPlane(airport.from, airport.to);
+      if(airport.from && airport.to) {
+        plane.fly();
+      } else {
+        plane.land();  
+      }
+      // console.log(from ,to);
+    }
+    //airport.getFromAndToPoints(e);
+    // const plane = new FlyingPlane(airport.from, airport.to);
+    // const plane2 = new FlyingPlane(airport.from, airport.to);
+    // const plane3 = new FlyingPlane(airport.from, airport.to);
+    /*if (airport.from && airport.to) {
       plane.fly();
     } else {
       plane.land();
-    }
+    }*/
+  } else {
+    console.log("hi");
   }
 }
 /**************/
@@ -1831,6 +1877,7 @@ const bigwindow = Vue.createApp({
 });
 bigwindow.config.globalProperties.emitter = emitter;
 bigwindow.mount("#world-map");
+console.log("world map mounted!")
 /** World map Vue App End **/
 
 /** Plane Screen Vue App Strat **/
