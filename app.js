@@ -193,9 +193,12 @@ function backToHome() {
     _$("#Map").style.opacity = null;
     _$("#Map").style.display = null;
     _$("#Map").style.visibility = null;
+    
     mapIsZommedIn = false;
     whichWindow = "big";
     document.body.style.cursor = "none";
+    closePopup();
+    hidePlanePopupScreenOne();
   }, 2000); // return to start page after 2sec.
 }
 /** all window start animation **/
@@ -278,6 +281,7 @@ function openWindow(which) {
       case 1: {
         // open first window
         firstScreen();
+        
         whichWindow = "small"
         break;
       }
@@ -288,6 +292,7 @@ function openWindow(which) {
       }
       case 3: {
         thirdScreen();
+        
         whichWindow = "small"
         break;
       }
@@ -300,14 +305,18 @@ function openWindow(which) {
     switch (which) {
       case 1: {
         firstScreen();
+        closePopup();
         break;
       }
       case 2: {
         secondScreen();
+        hidePlanePopupScreenOne();
         break;
       }
       case 3: {
         thirdScreen();
+        closePopup();
+        hidePlanePopupScreenOne();
         break;
       }
       default: {
@@ -430,6 +439,7 @@ function mapZoomIn () {
   if (!mapIsZommedIn && selected_option !== "flota-shutter") {
     mapIsZommedIn = true;
   }
+  
 }
 /**************/
 /** after zoomin world map set to center **/
@@ -454,8 +464,8 @@ function autoZoom() {
   var timeline = gsap.timeline({delay: 1});
   timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
   _$("#Map").style.visibility = "visible";
-  _$("#Map").style.transform = `scale(2.0)`;
-  _$("#Map").style.transformOrigin = "400px 660px";
+  _$("#Map").style.transform = `scale(1.7)`;
+  _$("#Map").style.transformOrigin = "350px 600px";
   /*if(width == 0) {
   } else {
     _$("#Map").style.transformOrigin = "400px 660px";
@@ -1989,8 +1999,11 @@ _$("#plane").addEventListener('mouseover', (e) => {
   emitter.emit("mousehover",{"emitContent": e.target.id});
 });
 _$("#plane").addEventListener('mouseout', (e) => {
-  emitter.emit("mouseout",{"emitContent": e.target.id});
+  // emitter.emit("mouseout",{"emitContent": e.target.id});
 });
+function hidePlanePopupScreenOne(){
+  emitter.emit("mouseout",{"emitContent":"plane"});
+}
 // _$('#plane').addEventListener('transitionend', () => {
 //   plane.style.transform = "transition(rotate(86deg))";
 // });
