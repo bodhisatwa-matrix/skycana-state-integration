@@ -464,8 +464,8 @@ function autoZoom() {
   var timeline = gsap.timeline({delay: 1});
   timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
   _$("#Map").style.visibility = "visible";
-  _$("#Map").style.transform = `scale(1.7)`;
-  _$("#Map").style.transformOrigin = "350px 600px";
+  _$("#Map").style.transform = `scale(1.6)`;
+  _$("#Map").style.transformOrigin = "300px 600px";
   /*if(width == 0) {
   } else {
     _$("#Map").style.transformOrigin = "400px 660px";
