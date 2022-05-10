@@ -1285,14 +1285,24 @@ body {
   stroke-width: 3;
   fill: none;
   animation: draw 35s linear infinite;
+  z-index: 99;
 }
-#plane {
+/* #plane {
   width: 50px;
   position: absolute;
   top: 0;
   /* animation: fly_plane 4s linear infinite; */
+  /* animation: fly_plane 4s linear forwards; */
+  /* display: none; */
+  /* transform: translateY(-20px) scaleX(-1); */
+  /* z-index: 4; */
+/* }  */
+.plane-img {
+  width : 100px;
+  position: absolute;
+  top: 0;
   animation: fly_plane 4s linear forwards;
-  display: none;
+  transform: translateY(-20px) scaleX(-1);
   z-index: 4;
 }
 @keyframes draw {

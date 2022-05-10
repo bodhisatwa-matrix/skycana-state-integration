@@ -1786,7 +1786,9 @@ const bigwindow = Vue.createApp({
             <path id="Path_869" data-name="Path 869" d="M311.8,375.683c1-.251,1.3-1.941.47-2.849a9.078,9.078,0,0,0-2.464-2.188c-5.6-2.546-11.03-5.483-16.843-7.557a29.2,29.2,0,0,1-5.307-2.5,23.7,23.7,0,0,0-6.046-2.914,6.7,6.7,0,0,1-2.929-1.546c-2.354-2.442-5.363-3.135-8.471-3.08a14.988,14.988,0,0,1-6.465-1.436,6.77,6.77,0,0,0-4.05-.7c-3.776,1.051-7.727,1.246-11.4,2.9-3.618,1.605-5.262,4.857-7.527,7.627-.012.006.366.466.562.462,1.094-.029,2.377.182,3.252-.3,3.906-2.182,8.527-2.7,12.231-5.346a2.414,2.414,0,0,1,2.923.855,4.238,4.238,0,0,0,3.1,2.536c1.929.395,3.874.706,5.786,1.139a15,15,0,0,1,3.99,1.168,20.988,20.988,0,0,0,8.026,2.352,3.721,3.721,0,0,1,3.2,2.379,7.394,7.394,0,0,0,6.506,4.616,3.952,3.952,0,0,1,.761.323c.826.329,1.035,1.084.52,2.062-.264.489-.593.939-.881,1.423a1.5,1.5,0,0,0,1.168,2.454c1.965.11,3.927.033,7.31.033,3.536,1.5,7.989-.734,12.578-1.925" transform="translate(380.619 316.85)" fill="#035f7e" fill-rule="evenodd" />
           </g>
         </svg>
-        <div class="world-map__destinations" id="map__destinations"></div>
+        <div class="world-map__destinations" id="map__destinations">
+          <div class="flying-planes"></div>
+        </div>
         <div class="world-map__destinations__nuestros-destinos" id="map__destinations_nuestros-destinos"></div>
       </div>
 
@@ -2054,7 +2056,9 @@ const planeScreen = Vue.createApp({
 planeScreen.config.globalProperties.emitter = emitter;
 planeScreen.mount('#plane-screen');
 /** Plane Screen Vue App End **/
-
+function mouseOverPlane(e){
+  emitter.emit("mousehover",{"emitContent": e.target.id});
+}
 _$("#plane").addEventListener('mouseover', (e) => {
   emitter.emit("mousehover",{"emitContent": e.target.id});
 });
@@ -2084,3 +2088,34 @@ function hidePlanePopupScreenOne(){
 });
 flyingPlane.config.globalProperties.emitter = emitter;
 flyingPlane.mount('#flying-plane');*/
+
+
+// *****************regarding multiple planes ****************
+function findLocationByCityID(cityID) {
+  var city_index = locations.findIndex((_l) => _l.id === cityID);
+  if (city_index > -1) {
+    var { x, y } = locations[city_index];
+    return { x, y };
+  }
+  return null;
+}
+function planeAndPathDOMElement(from, to, index) {
+  var rx = 70;
+  var ry = 40;
+
+  return `
+    <div class="plane-container" id="${index}">
+      <svg class="flight-path-container" id="${index}">
+        <path class="flight-path" id="${index}" d="M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}" />
+      </svg>
+      <img onmouseover="mouseOverPlane(event)" class="plane-img" id="plane" src="./Assets/Images/Planes/0${index}.png" alt="" style="offset-path:path('M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}');">
+    </div>
+  `;
+}
+var plane_1 = planeAndPathDOMElement({ x: 665, y: 765 }, { x: 880, y:610 }, 1);
+var plane_2 = planeAndPathDOMElement({ x: 830, y: 851 }, { x: 970, y:710 }, 2);
+var plane_3 = planeAndPathDOMElement({ x: 830, y: 851 }, { x: 1060, y:730 }, 3);
+
+// var plane_2 = planeAndPathDOMElement({ x: 400, y: 300 }, { x: 200, y: 100 }, 2);
+document.querySelector(".flying-planes").innerHTML = plane_1+plane_2+plane_3;
+// ***********************************************************
