@@ -50,6 +50,11 @@ var initialScale = 0.3;
 var currentScale = 0.3;
 var endScale = 10.0;
 
+var windowOpeningTimer;
+var windowClosingTimer;
+var currentlyOpenWindow = null;
+var currentlyOpeningWindow = null;
+
 /** All events **/
 emitter.on('startApp', (event) => {
   document.body.style.cursor = "none";  
@@ -58,12 +63,14 @@ emitter.on('startApp', (event) => {
 emitter.on('keydown', (event) => {
   if (typeof event.emitContent == "number") {
     if (event.emitContent == previousKey && whichWindow != "small") {
-      stopAnimation(whichWindow);
+      stopAnimation(event.emitContent,whichWindow);
       previousKey = 0;
     } else if (event.emitContent == previousKey && whichWindow == "small") {
-      backToHome();
+      stopAnimation(event.emitContent,whichWindow);
+      // backToHome();
+      previousKey = 0;
     } else {
-      stopAnimation(whichWindow);
+      stopAnimation(event.emitContent,whichWindow);
       startAnimation(event.emitContent, event.window);
       previousKey = event.emitContent;
     }
@@ -73,9 +80,37 @@ emitter.on('keydown', (event) => {
   }
 });
 
+// fires when any window starts opening
+emitter.on('window-open-start',function(data){
+  console.log('window opening',data)
+})
+
+// fires when any window is fully open
+emitter.on('window-open-end',function(data){
+  console.log('window fully opened',data)
+  currentlyOpenWindow = data;
+})
+
+// fires when any window starts closing
+emitter.on('window-close-start',function(data){
+  console.log('window closing start',data);
+});
+
+// fires when any window is fully closed
+emitter.on('window-close-end',function(data){
+  console.log('window fully closed',data);
+  if(currentlyOpenWindow.which === data.which){
+    backToHome();
+  }
+})
+
+
+
 emitter.on('animationended', (event) => {
   switch(event.emitContent) {
     case "Path___484":
+
+    // when first window animation ends
     case "Path_511_first_window": {
       if(event.value.path[0].getAttribute("d") == "M0,0H434.544V145.361H0Z" || event.value.path[0].getAttribute("d") == "M0,0H175.7V57.532H0Z") {
         openWindow(1);
@@ -83,6 +118,8 @@ emitter.on('animationended', (event) => {
       break;
     }
     case "Rectangle_i3":
+
+    // when second window animation ends
     case "Path_511_second_window": {
       if(event.value.path[0].getAttribute("d") == "M0,0H434.544V145.361H0Z" || event.value.path[0].getAttribute("height") == "62.119") {
         openWindow(2);
@@ -90,6 +127,8 @@ emitter.on('animationended', (event) => {
       break;
     }
     case "Rectangle__3":
+
+    // when third window animation ends
     case "Path_511_third_window": {
       if(event.value.path[0].getAttribute("d") == "M0,0H434.544V145.361H0Z" || event.value.path[0].getAttribute("height") == "58.208") {
         openWindow(3);
@@ -97,7 +136,8 @@ emitter.on('animationended', (event) => {
       break;
     }
     default: {
-      console.log("unknown animation ended!");
+      // console.log("Animation end" , event);
+      // console.log("unknown animation ended!");
       break;
     }
   }
@@ -168,7 +208,7 @@ emitter.on('mouseout', (event) => {
       gsap.to('.plane-name__pop-up', {display: 'none', autoAlpha: 0, duration: 2});
     }
     default: {
-      console.log("Wrong emitcontent!");
+      console.log("uncaught mouseout");
       break;
     }
   }
@@ -177,32 +217,38 @@ emitter.on('mouseout', (event) => {
 
 /***** General Functions *****/
 function backToHome() {
-  stopAnimation("small");
-  stopAnimation("big");
-  setTimeout(() => {
-    selected_option = "";
-    previousKey = 0;
-    hideLocations();
-    hideDestinationPoins();
-    hidePlane();
-    gsap.to(".world-map", { opacity: 0, display: "none", duration: 0.01 });
-    gsap.to(".nuestra-flota", { opacity: 0, display: "none", duration: 0.01 });
-    _$(".zoomed-in").style.display = "block";
-    _$("#Map").style.transform = null;
-    _$("#Map").style.transformOrigin = null;
-    _$("#Map").style.opacity = null;
-    _$("#Map").style.display = null;
-    _$("#Map").style.visibility = null;
-    
-    mapIsZommedIn = false;
-    whichWindow = "big";
-    document.body.style.cursor = "none";
-    closePopup();
-    hidePlanePopupScreenOne();
-  }, 2000); // return to start page after 2sec.
+  
+  stopAnimation(null , "small");
+  stopAnimation(null , "big");
+  currentlyOpenWindow = null;
+  selected_option = "";
+  previousKey = 0;
+  hideLocations();
+  hideDestinationPoins();
+  hidePlane();
+  gsap.to(".world-map", { opacity: 0, display: "none", duration: 0.01 });
+  gsap.to(".nuestra-flota", { opacity: 0, display: "none", duration: 0.01 });
+  _$(".zoomed-in").style.display = "block";
+  _$("#Map").style.transform = null;
+  _$("#Map").style.transformOrigin = null;
+  _$("#Map").style.opacity = null;
+  _$("#Map").style.display = null;
+  _$("#Map").style.visibility = null;
+  
+  mapIsZommedIn = false;
+  whichWindow = "big";
+  document.body.style.cursor = "none";
+  closePopup();
+  hidePlanePopupScreenOne();
 }
 /** all window start animation **/
 function startAnimation(which, window) {
+  clearTimeout(windowClosingTimer);
+  emitter.emit('window-open-start',{which,window});
+  windowOpeningTimer = setTimeout(function(){
+    emitter.emit('window-open-end',{which,window});
+    clearTimeout(windowOpeningTimer)
+  },2000)
   switch(which) {
     case 1: {
       if(window == "big") {
@@ -252,7 +298,15 @@ function startAnimation(which, window) {
 }
 /**************/
 /** all window stop animation**/
-function stopAnimation(window) {
+function stopAnimation(which,window) {
+  clearTimeout(windowOpeningTimer);
+  if(previousKey === which){
+    emitter.emit('window-close-start',{which,window});
+    windowClosingTimer = setTimeout(function(){
+      emitter.emit('window-close-end',{which,window});
+      clearTimeout(windowClosingTimer)
+    },2000)
+  }
   if(window == "big") {
     _$("#Path_511_first_window").setAttribute("d", "M0,0H434.544V487.045H0Z");
     _$("#Line_11_first_window").setAttribute("transform", "translate(208.29 463.211)");
@@ -329,7 +383,7 @@ function openWindow(which) {
 /**************/
 /** close specific screen **/
 function closeWindow(which) {
-  if(whichWindow == "big") {} else if(whichWindow = "small") {}
+  if(whichWindow == "big") {} else if(whichWind1ow = "small") {}
 }
 /**************/
 /** opne first screen  **/
