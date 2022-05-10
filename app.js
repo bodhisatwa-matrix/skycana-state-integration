@@ -54,6 +54,7 @@ var windowOpeningTimer;
 var windowClosingTimer;
 var currentlyOpenWindow = null;
 var currentlyOpeningWindow = null;
+var currentlyClosingWindow = null;
 
 /** All events **/
 emitter.on('startApp', (event) => {
@@ -83,6 +84,7 @@ emitter.on('keydown', (event) => {
 // fires when any window starts opening
 emitter.on('window-open-start',function(data){
   console.log('window opening',data)
+  currentlyOpeningWindow = data;
 })
 
 // fires when any window is fully open
@@ -94,12 +96,13 @@ emitter.on('window-open-end',function(data){
 // fires when any window starts closing
 emitter.on('window-close-start',function(data){
   console.log('window closing start',data);
+  currentlyClosingWindow = data;
 });
 
 // fires when any window is fully closed
 emitter.on('window-close-end',function(data){
   console.log('window fully closed',data);
-  if(currentlyOpenWindow.which === data.which){
+  if(currentlyClosingWindow.which === data.which){
     backToHome();
   }
 })
@@ -221,6 +224,9 @@ function backToHome() {
   stopAnimation(null , "small");
   stopAnimation(null , "big");
   currentlyOpenWindow = null;
+  currentlyOpeningWindow = null;
+  currentlyClosingWindow = null;
+
   selected_option = "";
   previousKey = 0;
   hideLocations();
