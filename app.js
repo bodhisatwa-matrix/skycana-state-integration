@@ -77,7 +77,7 @@ emitter.on('keydown', (event) => {
     }
   } else {
     // navigation key event
-    hidePlane();
+    // hidePlane();
   }
 });
 
@@ -181,6 +181,7 @@ emitter.on('mousehover', (event) => {
     }
     case 'plane': {
       gsap.to('.plane-name__pop-up', {display: 'block', autoAlpha: 1});
+      console.log(flightInfoPopupHTML(event.emitContent));
       break;
     }
     default: {
@@ -415,6 +416,7 @@ function firstScreen() {
       });
       gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 0, display: "none", duration: 1, autoAlpha: 0 });
       hideDestinationPoins();
+      renderAllPlanes();
       showLocations();
       // takeOff('e');
     }, 2000);
@@ -429,6 +431,7 @@ function firstScreen() {
     });
     gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 0, display: "none", duration: 1, autoAlpha: 0 });
     hideDestinationPoins();
+    renderAllPlanes()
     showLocations();
     // takeOff('e');
   }
@@ -2108,14 +2111,30 @@ function planeAndPathDOMElement(from, to, index) {
       <svg class="flight-path-container" id="${index}">
         <path class="flight-path" id="${index}" d="M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}" />
       </svg>
-      <img onmouseover="mouseOverPlane(event)" class="plane-img" id="plane" src="./Assets/Images/Planes/0${index}.png" alt="" style="offset-path:path('M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}');">
+      <img onmouseover="mouseOverPlane(event)" data-id="${index}" class="plane-img" id="plane" src="./Assets/Images/Planes/02.png" alt="" style="offset-path:path('M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}');">
     </div>
   `;
 }
-var plane_1 = planeAndPathDOMElement({ x: 665, y: 765 }, { x: 880, y:610 }, 1);
-var plane_2 = planeAndPathDOMElement({ x: 830, y: 851 }, { x: 970, y:710 }, 2);
-var plane_3 = planeAndPathDOMElement({ x: 830, y: 851 }, { x: 1060, y:730 }, 3);
 
-// var plane_2 = planeAndPathDOMElement({ x: 400, y: 300 }, { x: 200, y: 100 }, 2);
-document.querySelector(".flying-planes").innerHTML = plane_1+plane_2+plane_3;
+function renderAllPlanes(){
+  var plane_1 = planeAndPathDOMElement({ x: 880, y: 610 }, { x: 1060, y:730 }, "9H-AMD");
+  var plane_2 = planeAndPathDOMElement({ x: 665, y: 765 }, { x: 830, y:851 }, "9H-AME");
+  var plane_3 = planeAndPathDOMElement({ x: 970, y: 1001 }, { x: 665, y:765 }, "9H-AME3");
+
+  // var plane_2 = planeAndPathDOMElement({ x: 400, y: 300 }, { x: 200, y: 100 }, 2);
+  document.querySelector(".flying-planes").innerHTML = plane_1+plane_2+plane_3;
+}
+function clearAllPlanesFromDOM(){
+  document.querySelector(".flying-planes").innerHTML = "";
+}
+renderAllPlanes()
 // ***********************************************************
+
+// generaiting flight info from json data
+function flightInfoPopupHTML(flightID){
+  if("planes" in jsonData){
+    var {planes} = jsonData;
+    var currentPlane = planes.find(_p=>_p.id === flightID);
+    return currentPlane;
+  }
+}
