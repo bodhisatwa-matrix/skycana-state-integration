@@ -179,7 +179,12 @@ emitter.on('mousehover', (event) => {
     }
     case 'plane': {
       // gsap.to('.plane-name__pop-up', {display: 'block', autoAlpha: 1});
+      // loaderAnimation(event.id);
       showDynamicPlaneData(event.id);
+      break;
+    }
+    case 'closePlanePop': {
+      gsap.to('.plane-name__pop-up', {display: 'none', autoAlpha: 0, duration: 0.5});
       break;
     }
     default: {
@@ -825,6 +830,10 @@ function loaderAnimation(id) {
     circle.setAttribute("stroke-dasharray", angle + ", 20000");
         if (angle >= 360) {
           window.clearInterval(window.timer);
+          /*if(which == 1) {
+            showDynamicPlaneData(id);
+          } else if(which == 2) {
+          }*/
           populateCityPopUp(id);
           _$(`.${l}`).style.display = "none";
         }
@@ -2116,7 +2125,7 @@ function renderAllPlanes(){
   Object.keys(jsonData).forEach(data => {
   });
   var div1 = document.createElement("div");
-  var planes = jsonData["planes"];
+  var planes = getRandomPlane(jsonData["planes"]);
   var locations = jsonData["Locations"];
   var arr = [];
   for (const plane of planes) {
@@ -2128,7 +2137,7 @@ function renderAllPlanes(){
     path.setAttributeNS(null, "class", "flight-path");
     path.setAttributeNS(null, "d", `M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}`);
     var img = document.createElement("img");
-    img.src = "./Assets/Images/Planes/02.png";
+    img.src = plane.img_url;
     img.setAttribute("style", `offset-path: path('M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}')`);
     img.setAttribute("class", "plane-img");
     img.setAttribute("id", plane.id);
@@ -2174,6 +2183,7 @@ function showDynamicPlaneData(id) {
   _$('.location-destination').querySelector("h2").innerHTML = planeData.from.toUpperCase();
   _$(".plane-depature").querySelector('h2').innerHTML = planeData.depature_time;
   _$(".plane-arival").querySelector('h2').innerHTML = planeData.arival_time;
+  _$("#flying_plane_img").src = planeData.img_url;
   gsap.to('.plane-name__pop-up', {display: 'block', autoAlpha: 1});
 }
 
@@ -2206,4 +2216,10 @@ function calculatePlaneFlyingAnimation(data) {
 }
 function removeKeyFrameFromDOM() {
   document.body.remove('style');
+}
+function getRandomPlane(planeData) {
+  return planeData.sort(() => Math.random() - Math.random()).slice(0, 3);
+}
+function closePlanePopup() {
+  emitter.emit("mousehover",{"emitContent": 'closePlanePop'});
 }
