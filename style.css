@@ -572,6 +572,7 @@ body {
 
 .plane-name__pop-up {
   visibility: hidden;
+  display: none;
   width: 740px;
   height: 501px;
   position: absolute;
@@ -1267,6 +1268,10 @@ body {
 /* *********************************** */
 
 /* styles related to flying plane */
+.plane-container {
+  width: 2567px;
+  height: 1303px;
+}
 .flight-path-container {
   position: absolute;
   top: 0;
@@ -1274,6 +1279,7 @@ body {
   width: 100%;
   z-index: 0;
   display: none;
+  left: 0;
 }
 
 .flight-path {
@@ -1286,6 +1292,8 @@ body {
   fill: none;
   animation: draw 35s linear infinite;
   z-index: 99;
+  top:0;
+  left:0;
 }
 /* #plane {
   width: 50px;

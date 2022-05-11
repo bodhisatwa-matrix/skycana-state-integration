@@ -105,9 +105,7 @@ emitter.on('window-close-end',function(data){
   if(currentlyClosingWindow.which === data.which){
     backToHome();
   }
-})
-
-
+});
 
 emitter.on('animationended', (event) => {
   switch(event.emitContent) {
@@ -180,8 +178,8 @@ emitter.on('mousehover', (event) => {
       break;
     }
     case 'plane': {
-      gsap.to('.plane-name__pop-up', {display: 'block', autoAlpha: 1});
-      console.log(flightInfoPopupHTML(event.emitContent));
+      // gsap.to('.plane-name__pop-up', {display: 'block', autoAlpha: 1});
+      showDynamicPlaneData(event.id);
       break;
     }
     default: {
@@ -439,6 +437,7 @@ function firstScreen() {
 /**************/
 /** open second screen **/
 function secondScreen() {
+  clearAllPlanesFromDOM();
   selected_option = "destinos-shutter";
   _$(".zoomed-in").style.display = "none";
   _$(".world-map__heading").innerHTML = "Nuestros destinos";
@@ -481,6 +480,7 @@ function secondScreen() {
 /**************/
 /** open third screen **/
 function thirdScreen() {
+  clearAllPlanesFromDOM()
   if(mapIsZommedIn) mapIsZommedIn = false;
   selected_option = "flota-shutter";
   _$(".zoomed-in").style.display = "none";
@@ -667,6 +667,7 @@ function FlyingPlane(from, to) {
         // `M${from.x},${from.y} A100,90 0 1,1 ${to.x},${to.y}`
         `M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}`
       );
+      console.log("showing flight path container")
       _$(".flight-path-container").style.display = "block";
       // plane.style.offsetPath = `path('M${from.x},${from.y} A100,90 0 1,1 ${to.x},${to.y}')`;
       plane.style.offsetPath = `path('M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}')`;
@@ -1005,31 +1006,8 @@ function showSlides(n) {
 function takeOff(e) {
   // cons
   if (selected_option === "vuelos-shutter" && mapIsZommedIn) {
-    /*var planeData = jsonData["planes"];
-    var cityData = jsonData["Locations"];
-    for (const i of planeData) {
-      let data1 = cityData.find(o => o.id == i.from);
-      let from = {} 
-      from.x = data1.x;
-      from.y = data1.y;
-      let data2 = cityData.find(o => o.id == i.to);
-      let to = {};
-      to.x = data2?.x;
-      to.y = data2?.y;
-      airport.from = from;
-      airport.to = to;
-      let plane = new FlyingPlane(airport.from, airport.to);
-      if(airport.from && airport.to) {
-        plane.fly();
-      } else {
-        plane.land();  
-      }
-      // console.log(from ,to);
-    }*/
     airport.getFromAndToPoints(e);
     const plane = new FlyingPlane(airport.from, airport.to);
-    // const plane2 = new FlyingPlane(airport.from, airport.to);
-    // const plane3 = new FlyingPlane(airport.from, airport.to);
     if (airport.from && airport.to) {
       plane.fly();
     } else {
@@ -2060,7 +2038,7 @@ planeScreen.config.globalProperties.emitter = emitter;
 planeScreen.mount('#plane-screen');
 /** Plane Screen Vue App End **/
 function mouseOverPlane(e){
-  emitter.emit("mousehover",{"emitContent": e.target.id});
+  emitter.emit("mousehover",{"emitContent": 'plane', id: e.target.id});
 }
 _$("#plane").addEventListener('mouseover', (e) => {
   emitter.emit("mousehover",{"emitContent": e.target.id});
@@ -2105,15 +2083,15 @@ function findLocationByCityID(cityID) {
 function planeAndPathDOMElement(from, to, index) {
   var rx = 70;
   var ry = 40;
-
-  return `
-    <div class="plane-container" id="${index}">
-      <svg class="flight-path-container" id="${index}">
-        <path class="flight-path" id="${index}" d="M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}" />
-      </svg>
-      <img onmouseover="mouseOverPlane(event)" data-id="${index}" class="plane-img" id="plane" src="./Assets/Images/Planes/02.png" alt="" style="offset-path:path('M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}');">
-    </div>
-  `;
+  return `<path class="flight-path" id="${index}" d="M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}" />`;
+  // return `
+  //   <div class="plane-container" id="${index}">
+  //     <svg class="flight-path-container" id="${index}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="translate(7,100)">
+  //       <path class="flight-path" id="${index}" d="M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}" />
+  //     </svg>
+  //     <img onmouseover="mouseOverPlane(event)" data-id="${index}" class="plane-img" id="plane" src="./Assets/Images/Planes/02.png" alt="" style="offset-path:path('M${from.x},${from.y} A${rx},${ry} 0 1,1 ${to.x},${to.y}');">
+  //   </div>
+  // `;
 }
 
 function renderAllPlanes(){
@@ -2121,13 +2099,50 @@ function renderAllPlanes(){
   var plane_2 = planeAndPathDOMElement({ x: 665, y: 765 }, { x: 830, y:851 }, "9H-AME");
   var plane_3 = planeAndPathDOMElement({ x: 970, y: 1001 }, { x: 665, y:765 }, "9H-AME3");
 
-  // var plane_2 = planeAndPathDOMElement({ x: 400, y: 300 }, { x: 200, y: 100 }, 2);
-  document.querySelector(".flying-planes").innerHTML = plane_1+plane_2+plane_3;
+  var div = document.createElement('div');
+  div.setAttribute('class', 'plane-container');
+  var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttributeNS(null, "height", "1303px");
+  svg.setAttributeNS(null, "width", "2567.984px");
+  svg.setAttributeNS(null, "fill", "none");1
+  Object.keys(jsonData).forEach(data => {
+  });
+  var div1 = document.createElement("div");
+  var planes = jsonData["planes"];
+  var locations = jsonData["Locations"];
+  for (const plane of planes) {
+    
+    var from = locations.find(o => o.id == plane.from);
+    var to = locations.find(o => o.id == plane.to);
+    
+    var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttributeNS(null, "class", "flight-path");
+    path.setAttributeNS(null, "d", `M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}`);
+    var img = document.createElement("img");
+    img.src = "./Assets/Images/Planes/02.png";
+    img.setAttribute("style", `offset-path: path('M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}')`);
+    img.setAttribute("class", "plane-img");
+    img.setAttribute("id", plane.id);
+    img.setAttribute("onmouseover", "mouseOverPlane(event)");
+    svg.appendChild(path);
+    
+    div1.style.width = "100%";
+    div1.style.height = "100%";
+    div1.appendChild(svg);
+    div1.appendChild(img);
+  }
+
+  div.appendChild(div1);
+  document.querySelector(".flying-planes").appendChild(div);
+
 }
 function clearAllPlanesFromDOM(){
-  document.querySelector(".flying-planes").innerHTML = "";
+  var div = _$(".plane-container");
+  if(div) {
+    document.querySelector(".flying-planes").removeChild(div);
+  }
 }
-renderAllPlanes()
+// renderAllPlanes()
 // ***********************************************************
 
 // generaiting flight info from json data
@@ -2137,4 +2152,16 @@ function flightInfoPopupHTML(flightID){
     var currentPlane = planes.find(_p=>_p.id === flightID);
     return currentPlane;
   }
+}
+function showDynamicPlaneData(id) {
+  var planeData = jsonData["planes"].find(o => o.id == id);
+  _$('.plane-id').innerHTML = planeData.id;
+  _$('.plane-name').innerHTML = planeData.name;
+  // _$('.location-source').querySelector("h3").innerHTML = planeData.name;
+  _$('.location-source').querySelector("h2").innerHTML = planeData.to.toUpperCase();
+  // _$('.location-destination').querySelector("h3").innerHTML = planeData.name;
+  _$('.location-destination').querySelector("h2").innerHTML = planeData.from.toUpperCase();
+  _$(".plane-depature").querySelector('h2').innerHTML = planeData.depature_time;
+  _$(".plane-arival").querySelector('h2').innerHTML = planeData.arival_time;
+  gsap.to('.plane-name__pop-up', {display: 'block', autoAlpha: 1});
 }

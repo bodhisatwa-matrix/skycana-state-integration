@@ -86,7 +86,9 @@
       "seating": "220 asientos",
       "flights-range": "Rango de vuelo de 5 horas",
       "capacity": "21,000 kg de capacidad",
-      "size": "37,57 metros de largo"
+      "size": "37,57 metros de largo",
+			"arival_time": "01:00",
+			"depature_time": "06:00"
     },
     {
       "id": "9H-AME",
@@ -101,7 +103,9 @@
       "seating": "320 asientos",
       "flights-range": "Rango de vuelo de 10 horas",
       "capacity": "42,000 kg de capacidad",
-      "size": "40,57 metros de largo"
+      "size": "40,57 metros de largo",
+			"arival_time": "02:00",
+			"depature_time": "06:00"
     },
     {
       "id": "9H-AME3",
@@ -116,7 +120,9 @@
       "seating": "320 asientos",
       "flights-range": "Rango de vuelo de 10 horas",
       "capacity": "42,000 kg de capacidad",
-      "size": "40,57 metros de largo"
+      "size": "40,57 metros de largo",
+			"arival_time": "06:00",
+			"depature_time": "02:00"
     },
     {
       "id": "9H-AME4",
@@ -131,7 +137,9 @@
       "seating": "320 asientos",
       "flights-range": "Rango de vuelo de 10 horas",
       "capacity": "42,000 kg de capacidad",
-      "size": "40,57 metros de largo"
+      "size": "40,57 metros de largo",
+			"arival_time": "06:00",
+			"depature_time": "11:00"
     },
     {
       "id": "9H-AME5",
@@ -146,7 +154,9 @@
       "seating": "320 asientos",
       "flights-range": "Rango de vuelo de 10 horas",
       "capacity": "42,000 kg de capacidad",
-      "size": "40,57 metros de largo"
+      "size": "40,57 metros de largo",
+			"arival_time": "10:00",
+			"depature_time": "14:00"
     },
     {
       "id": "9H-AME6",
@@ -161,7 +171,9 @@
       "seating": "320 asientos",
       "flights-range": "Rango de vuelo de 10 horas",
       "capacity": "42,000 kg de capacidad",
-      "size": "40,57 metros de largo"
+      "size": "40,57 metros de largo",
+			"arival_time": "03:00",
+			"depature_time": "06:00"
     }
   ],
   "image_urls": [
