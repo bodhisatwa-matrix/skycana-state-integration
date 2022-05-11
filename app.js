@@ -2110,6 +2110,7 @@ function renderAllPlanes(){
   var div1 = document.createElement("div");
   var planes = jsonData["planes"];
   var locations = jsonData["Locations"];
+  var arr = [];
   for (const plane of planes) {
     
     var from = locations.find(o => o.id == plane.from);
@@ -2130,11 +2131,13 @@ function renderAllPlanes(){
     div1.style.height = "100%";
     div1.appendChild(svg);
     div1.appendChild(img);
+    var time = ((plane.fligh_time / plane.total_time) * 100);
+    arr.push({id: plane.id, time: time});
   }
 
   div.appendChild(div1);
   document.querySelector(".flying-planes").appendChild(div);
-
+  calculatePlaneFlyingAnimation(arr);
 }
 function clearAllPlanesFromDOM(){
   var div = _$(".plane-container");
@@ -2164,4 +2167,42 @@ function showDynamicPlaneData(id) {
   _$(".plane-depature").querySelector('h2').innerHTML = planeData.depature_time;
   _$(".plane-arival").querySelector('h2').innerHTML = planeData.arival_time;
   gsap.to('.plane-name__pop-up', {display: 'block', autoAlpha: 1});
+}
+
+function setAnimationKeyFrames() {
+  
+}
+
+function calculatePlaneFlyingAnimation(data) {
+  /*id = id.replace(/-/g, '_');
+  var css = window.document.styleSheets[0];
+  css.insertRule(`
+    @keyframes ${id}_fly_plane {
+      0% {
+        offset-distance: 0%;
+      }
+      100% {
+        offset-distance: ${time}%;
+      }
+    }
+  `, css.cssRules.length);
+  _$(`#${id}`).style.animation = `${id}_fly_plane 4s linear forwards`;*/
+  
+  // var plane = _$(".plane-img");
+  for (const d of data) {
+    var new_id = d.id.replace(/-/g, '');
+    document.body.append(
+      Object.assign(document.createElement("style"), {
+        textContent: `@keyframes fly_plane${new_id} {
+          0% {
+            offset-distance: 0%;
+          }
+          100% {
+            offset-distance: ${d.time}%;
+          }
+        }`
+      }));
+      document.getElementById(`${d.id}`).style.animation = `fly_plane${new_id} 4s linear forwards`;
+  }
+
 }
