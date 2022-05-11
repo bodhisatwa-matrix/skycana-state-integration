@@ -393,6 +393,7 @@ function closeWindow(which) {
 /**************/
 /** opne first screen  **/
 function firstScreen() {
+  clearAllPlanesFromDOM();
   selected_option = "vuelos-shutter";
   _$(".zoomed-in").style.display = "none";
   _$(".world-map__heading").innerHTML = "Vuelos en tiempo real";
@@ -2095,9 +2096,16 @@ function planeAndPathDOMElement(from, to, index) {
 }
 
 function renderAllPlanes(){
-  var plane_1 = planeAndPathDOMElement({ x: 880, y: 610 }, { x: 1060, y:730 }, "9H-AMD");
-  var plane_2 = planeAndPathDOMElement({ x: 665, y: 765 }, { x: 830, y:851 }, "9H-AME");
-  var plane_3 = planeAndPathDOMElement({ x: 970, y: 1001 }, { x: 665, y:765 }, "9H-AME3");
+  // var plane_1 = planeAndPathDOMElement({ x: 880, y: 610 }, { x: 1060, y:730 }, "9H-AMD");
+  // var plane_2 = planeAndPathDOMElement({ x: 665, y: 765 }, { x: 830, y:851 }, "9H-AME");
+  // var plane_3 = planeAndPathDOMElement({ x: 970, y: 1001 }, { x: 665, y:765 }, "9H-AME3");
+  var imgs = _$$('.plane-img');
+  
+  if(imgs.length) {
+    for (const i of imgs) {
+      document.getElementById(i.id).remove();
+    }
+  }
 
   var div = document.createElement('div');
   div.setAttribute('class', 'plane-container');
@@ -2142,7 +2150,7 @@ function renderAllPlanes(){
 function clearAllPlanesFromDOM(){
   var div = _$(".plane-container");
   if(div) {
-    document.querySelector(".flying-planes").removeChild(div);
+    _$(".flying-planes").removeChild(div);
   }
 }
 // renderAllPlanes()
@@ -2174,24 +2182,14 @@ function setAnimationKeyFrames() {
 }
 
 function calculatePlaneFlyingAnimation(data) {
-  /*id = id.replace(/-/g, '_');
-  var css = window.document.styleSheets[0];
-  css.insertRule(`
-    @keyframes ${id}_fly_plane {
-      0% {
-        offset-distance: 0%;
-      }
-      100% {
-        offset-distance: ${time}%;
-      }
-    }
-  `, css.cssRules.length);
-  _$(`#${id}`).style.animation = `${id}_fly_plane 4s linear forwards`;*/
+  var styles = document.getElementsByTagName("style");
   
-  // var plane = _$(".plane-img");
+  for (const s of styles) {
+    s.remove();
+  }
   for (const d of data) {
     var new_id = d.id.replace(/-/g, '');
-    document.body.append(
+    document.body.appendChild(
       Object.assign(document.createElement("style"), {
         textContent: `@keyframes fly_plane${new_id} {
           0% {
@@ -2205,4 +2203,7 @@ function calculatePlaneFlyingAnimation(data) {
       document.getElementById(`${d.id}`).style.animation = `fly_plane${new_id} 4s linear forwards`;
   }
 
+}
+function removeKeyFrameFromDOM() {
+  document.body.remove('style');
 }
