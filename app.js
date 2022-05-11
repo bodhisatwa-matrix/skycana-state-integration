@@ -952,6 +952,14 @@ function populateCityPopUp(id) {
   img__slider.innerHTML = "";
   slider_dot.setAttribute("style", "text-align:center");
   let j = 1;
+
+  var span = document.createElement('span');
+  span.setAttribute("id" , "close_city_pop_up");
+  span.setAttribute("onmouseover" , "closePopup(event)");
+  span.innerHTML = "x";
+
+  _$(".city-data__pop-up .city-data__header .top-header").appendChild(span);
+
   for (const i of city_data.picts) {
     var span = document.createElement("span");
     var city_data_img = document.createElement("div");
@@ -2217,9 +2225,17 @@ function calculatePlaneFlyingAnimation(data) {
 function removeKeyFrameFromDOM() {
   document.body.remove('style');
 }
+
+/********************************************************************* */
 function getRandomPlane(planeData) {
   return planeData.sort(() => Math.random() - Math.random()).slice(0, 3);
 }
+/******************************************************************** */
+
 function closePlanePopup() {
   emitter.emit("mousehover",{"emitContent": 'closePlanePop'});
+}
+
+function closeCityDataPopup(){
+  emitter.emit("mousehover",{"emitContent" : 'cityDataPopup'});
 }
