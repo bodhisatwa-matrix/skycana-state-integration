@@ -1255,11 +1255,12 @@ body {
   z-index: 3;
   opacity: 0;
   display: none;
+  transform: translateY(-5px);
 }
 .destination-point__city-name {
   position: absolute;
   text-align: center;
-  font: normal normal bold 20px Montserrat;
+  font: normal normal bold 15px Montserrat;
   color: #e59c26;
   user-select: none;
   opacity: 0;
@@ -1584,7 +1585,7 @@ body {
 .location-point__city-name {
   position: absolute;
   text-align: center;
-  font: normal normal bold 20px Montserrat;
+  font: normal normal bold 15px Montserrat;
   color: #e59c26;
   user-select: none;
   
