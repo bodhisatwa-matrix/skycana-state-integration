@@ -2182,7 +2182,8 @@ function renderAllPlanes(){
   Object.keys(jsonData).forEach(data => {
   });
   var div1 = document.createElement("div");
-  var planes = getRandomPlane(jsonData["planes"]);
+  // var planes = getRandomPlane(jsonData["planes"]);
+  var planes = staticThreePlaneData();
   var locations = jsonData["Locations"];
   var arr = [];
   for (const plane of planes) {
@@ -2289,23 +2290,166 @@ function closeCityDataPopup(){
 }
 
 function staticThreePlaneData(){
-  const data = [
-    {
-      "id": "9H-AMD",
-      "name": "Plane1",
-      "label": "Visible label name",
-      "img_url": "./Assets/Images/Planes/01.png",
-      "video-url": "http://host/video1",
-      "from": "sdq",
-      "to": "hab",
-      "total_time": 5,
-      "fligh_time": 4,
-      "seating": "220 asientos",
-      "flights-range": "Rango de vuelo de 5 horas",
-      "capacity": "21,000 kg de capacidad",
-      "size": "37,57 metros de largo",
-			"arival_time": "01:00",
-			"depature_time": "06:00"
-    },
-  ]
+  const datas = {
+    data_1  : [
+      {
+        "id": "9H-AME4",
+        "name": "Plane4",
+        "label": "Visible label name",
+        "img_url": "./Assets/Images/Planes/04.png",
+        "video-url": "http://host/video1",
+        "from": "mia",
+        "to": "punta",
+        "total_time": 100,
+        "fligh_time": 80,
+        "seating": "220 asientos",
+        "flights-range": "Rango de vuelo de 5 horas",
+        "capacity": "21,000 kg de capacidad",
+        "size": "37,57 metros de largo",
+        "arival_time": "01:00",
+        "depature_time": "06:00"
+      },
+      {
+        "id": "9H-AMD3",
+        "name": "Plane3",
+        "label": "Visible label name",
+        "img_url": "./Assets/Images/Planes/03.png",
+        "video-url": "http://host/video1",
+        "from": "sdq",
+        "to": "hab",
+        "total_time": 100,
+        "fligh_time": 50,
+        "seating": "220 asientos",
+        "flights-range": "Rango de vuelo de 5 horas",
+        "capacity": "21,000 kg de capacidad",
+        "size": "37,57 metros de largo",
+        "arival_time": "01:00",
+        "depature_time": "06:00"
+      },
+      {
+        "id": "9H-AMD5",
+        "name": "Plane5",
+        "label": "Visible label name",
+        "img_url": "./Assets/Images/Planes/05.png",
+        "video-url": "http://host/video1",
+        "from": "hab",
+        "to": "mia",
+        "total_time": 100,
+        "fligh_time": 30,
+        "seating": "220 asientos",
+        "flights-range": "Rango de vuelo de 5 horas",
+        "capacity": "21,000 kg de capacidad",
+        "size": "37,57 metros de largo",
+        "arival_time": "01:00",
+        "depature_time": "06:00"
+      },
+    ],
+    data_2 : [
+      {
+        "id": "9H-AMD",
+        "name": "Plane1",
+        "label": "Visible label name",
+        "img_url": "./Assets/Images/Planes/01.png",
+        "video-url": "http://host/video1",
+        "from": "sdq",
+        "to": "hab",
+        "total_time": 80,
+        "fligh_time": 10,
+        "seating": "220 asientos",
+        "flights-range": "Rango de vuelo de 5 horas",
+        "capacity": "21,000 kg de capacidad",
+        "size": "37,57 metros de largo",
+        "arival_time": "01:00",
+        "depature_time": "06:00"
+      },
+      {
+        "id": "9H-AMD",
+        "name": "Plane1",
+        "label": "Visible label name",
+        "img_url": "./Assets/Images/Planes/01.png",
+        "video-url": "http://host/video1",
+        "from": "punta",
+        "to": "mia",
+        "total_time": 40,
+        "fligh_time": 4,
+        "seating": "220 asientos",
+        "flights-range": "Rango de vuelo de 5 horas",
+        "capacity": "21,000 kg de capacidad",
+        "size": "37,57 metros de largo",
+        "arival_time": "01:00",
+        "depature_time": "06:00"
+      },
+      {
+        "id": "9H-AMD",
+        "name": "Plane1",
+        "label": "Visible label name",
+        "img_url": "./Assets/Images/Planes/01.png",
+        "video-url": "http://host/video1",
+        "from": "hab",
+        "to": "sdq",
+        "total_time": 15,
+        "fligh_time": 5,
+        "seating": "220 asientos",
+        "flights-range": "Rango de vuelo de 5 horas",
+        "capacity": "21,000 kg de capacidad",
+        "size": "37,57 metros de largo",
+        "arival_time": "01:00",
+        "depature_time": "06:00"
+      },
+    ],
+    data_3 : [
+      {
+        "id": "9H-AMD",
+        "name": "Plane1",
+        "label": "Visible label name",
+        "img_url": "./Assets/Images/Planes/01.png",
+        "video-url": "http://host/video1",
+        "from": "sdq",
+        "to": "hab",
+        "total_time": 80,
+        "fligh_time": 10,
+        "seating": "220 asientos",
+        "flights-range": "Rango de vuelo de 5 horas",
+        "capacity": "21,000 kg de capacidad",
+        "size": "37,57 metros de largo",
+        "arival_time": "01:00",
+        "depature_time": "06:00"
+      },
+      {
+        "id": "9H-AMD",
+        "name": "Plane1",
+        "label": "Visible label name",
+        "img_url": "./Assets/Images/Planes/01.png",
+        "video-url": "http://host/video1",
+        "from": "punta",
+        "to": "mia",
+        "total_time": 40,
+        "fligh_time": 4,
+        "seating": "220 asientos",
+        "flights-range": "Rango de vuelo de 5 horas",
+        "capacity": "21,000 kg de capacidad",
+        "size": "37,57 metros de largo",
+        "arival_time": "01:00",
+        "depature_time": "06:00"
+      },
+      {
+        "id": "9H-AMD",
+        "name": "Plane1",
+        "label": "Visible label name",
+        "img_url": "./Assets/Images/Planes/01.png",
+        "video-url": "http://host/video1",
+        "from": "sdq",
+        "to": "hab",
+        "total_time": 15,
+        "fligh_time": 5,
+        "seating": "220 asientos",
+        "flights-range": "Rango de vuelo de 5 horas",
+        "capacity": "21,000 kg de capacidad",
+        "size": "37,57 metros de largo",
+        "arival_time": "01:00",
+        "depature_time": "06:00"
+      },
+    ]
+  }
+  return datas.data_1;
 }
