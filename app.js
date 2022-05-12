@@ -345,7 +345,6 @@ function openWindow(which) {
       case 1: {
         // open first window
         firstScreen();
-        
         whichWindow = "small"
         break;
       }
@@ -356,7 +355,6 @@ function openWindow(which) {
       }
       case 3: {
         thirdScreen();
-        
         whichWindow = "small"
         break;
       }
@@ -398,6 +396,8 @@ function closeWindow(which) {
 /**************/
 /** opne first screen  **/
 function firstScreen() {
+  //set map to correct position
+  positionFirstWindowContent();
   clearAllPlanesFromDOM();
   selected_option = "vuelos-shutter";
   _$(".zoomed-in").style.display = "none";
@@ -443,6 +443,7 @@ function firstScreen() {
 /**************/
 /** open second screen **/
 function secondScreen() {
+  positionSecondWindowContent();
   clearAllPlanesFromDOM();
   selected_option = "destinos-shutter";
   _$(".zoomed-in").style.display = "none";
@@ -512,20 +513,63 @@ function mapZoomIn () {
 }
 /**************/
 /** after zoomin world map set to center **/
-function setMapToCenter() {
-    console.log(_$("#Map").getBoundingClientRect());
-  _$('.container').setAttribute("tabindex", 1);
-  _$('.container').focus();
-  // _$('.container').scrollLeft = (_$("#Map").getBoundingClientRect().width, _$('.container').getBoundingClientRect().width) / 2;
-  // _$('.container').scrollTop = (_$("#Map").getBoundingClientRect().height, _$('.container').getBoundingClientRect().height) / 2;
+function positionFirstWindowContent(){
   _$('.container').scrollLeft = (3081, _$('.container').getBoundingClientRect().width) / 2;
   _$('.container').scrollTop = (1564, _$('.container').getBoundingClientRect().height) / 2;
   var {width} = document.body.getBoundingClientRect();
   if(width > 1365) {
     initialScale = 1.0;
     currentScale = 1.0;
+    _$('.container').scrollLeft = 450;
+    _$('.container').scrollTop = 510;
   }
+}
+function positionSecondWindowContent(){
+  _$('.container').scrollLeft = (_$('.container').getBoundingClientRect().width) / 2;
+  _$('.container').scrollTop = (_$('.container').getBoundingClientRect().height) / 2;
+  var {width} = document.body.getBoundingClientRect();
+  if(width > 1365) {
+    initialScale = 1.0;
+    currentScale = 1.0;
+    _$('.container').scrollLeft = 550;
+    _$('.container').scrollTop = 550;
+  } 
+}
+
+function setMapToCenter() {
+  
+  if(selected_option === "vuelos-shutter"){
+    _$('.container').setAttribute("tabindex", 1);
+    _$('.container').focus();
+    // _$('.container').scrollLeft = (_$("#Map").getBoundingClientRect().width, _$('.container').getBoundingClientRect().width) / 2;
+    // _$('.container').scrollTop = (_$("#Map").getBoundingClientRect().height, _$('.container').getBoundingClientRect().height) / 2;
+    _$('.container').scrollLeft = (3081, _$('.container').getBoundingClientRect().width) / 2;
+    _$('.container').scrollTop = (1564, _$('.container').getBoundingClientRect().height) / 2;
+    var {width} = document.body.getBoundingClientRect();
+    if(width > 1365) {
+      initialScale = 1.0;
+      currentScale = 1.0;
+      _$('.container').scrollLeft = 600;
+      _$('.container').scrollTop = 510;
+    }
+  }else if(selected_option === "destinos-shutter"){
+    _$('.container').setAttribute("tabindex", 1);
+    _$('.container').focus();
+    // _$('.container').scrollLeft = (_$("#Map").getBoundingClientRect().width, _$('.container').getBoundingClientRect().width) / 2;
+    // _$('.container').scrollTop = (_$("#Map").getBoundingClientRect().height, _$('.container').getBoundingClientRect().height) / 2;
+    _$('.container').scrollLeft = (_$('.container').getBoundingClientRect().width) / 2;
+    _$('.container').scrollTop = (_$('.container').getBoundingClientRect().height) / 2;
+    var {width} = document.body.getBoundingClientRect();
+    if(width > 1365) {
+      initialScale = 1.0;
+      currentScale = 1.0;
+      _$('.container').scrollLeft = 550;
+      _$('.container').scrollTop = 550;
+    } 
+  }else{}
   autoZoom();
+  console.log('set map to center called');
+  console.log('selected option',selected_option);
 }
 /**************/
 /** auto zoom **/
@@ -885,9 +929,14 @@ readTextFile("Assets/data/SkyCanaXP-DataModel.json", function (text) {
   jsonData.Locations.forEach((_l) => {
     const location_point = new LocationPoint(_l.x, _l.y, _l.id, _l.name);
     location_point.render();
-    const destination_point = new DestinationPoint(_l.x, _l.y, _l.id, _l.name);
-    destination_point.render();
+    
   });
+  jsonData.LocationsScreenTwo.forEach((_l)=>{
+    const destination_point = new DestinationPoint(_l.x, _l.y, _l.id, _l.name);
+    // skipping render of punta
+    if(_l.id !== 'punta')
+      destination_point.render();
+  })
   Object.keys(data).forEach((key) => {
     if (key == "Locations") {
       if (Array.isArray(data["Locations"])) {
@@ -925,7 +974,7 @@ function populateCityPopUp(id) {
   //   code: data["city-code"],
   // };
   Object.keys(jsonData).forEach((key) => {
-    if(key == "Locations") {
+    if(key == "LocationsScreenTwo") {
       cityData = jsonData[key];
     }
 
@@ -2137,7 +2186,6 @@ function renderAllPlanes(){
   var locations = jsonData["Locations"];
   var arr = [];
   for (const plane of planes) {
-    
     var from = locations.find(o => o.id == plane.from);
     var to = locations.find(o => o.id == plane.to);
     
@@ -2238,4 +2286,26 @@ function closePlanePopup() {
 
 function closeCityDataPopup(){
   emitter.emit("mousehover",{"emitContent" : 'cityDataPopup'});
+}
+
+function staticThreePlaneData(){
+  const data = [
+    {
+      "id": "9H-AMD",
+      "name": "Plane1",
+      "label": "Visible label name",
+      "img_url": "./Assets/Images/Planes/01.png",
+      "video-url": "http://host/video1",
+      "from": "sdq",
+      "to": "hab",
+      "total_time": 5,
+      "fligh_time": 4,
+      "seating": "220 asientos",
+      "flights-range": "Rango de vuelo de 5 horas",
+      "capacity": "21,000 kg de capacidad",
+      "size": "37,57 metros de largo",
+			"arival_time": "01:00",
+			"depature_time": "06:00"
+    },
+  ]
 }

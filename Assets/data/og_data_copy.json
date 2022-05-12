@@ -1,0 +1,203 @@
+{
+    "request-date": "[request datettime]",
+    "language": "es",
+    "city-code": "sdq",
+    "city-name": "Santo Domingo",
+    "Temp": "32",
+    "Locations": [
+      {
+        "id": "punta",
+        "name": "Punta Cana",
+        "description": "Punta Cana",
+        "x": 990,
+        "y": 758,
+        "picts": [
+          "https://images.unsplash.com/photo-1598918429966-1ac4f6143bc2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+          "https://images.unsplash.com/photo-1591720170982-c36bac4f7710?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1075&q=80"
+        ]
+      },
+      {
+        "id": "sdq",
+        "name": "Santo Domingo",
+        "description": "Santo Domingo is the capital of the Dominican Republic and one of the Caribbean's oldest cities.",
+        "x": 970,
+        "y": 780,
+        
+        "picts": [
+          "https://images.unsplash.com/photo-1598918429966-1ac4f6143bc2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+          "https://images.unsplash.com/photo-1591720170982-c36bac4f7710?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1075&q=80"
+        ]
+      },
+      {
+        "id": "mia",
+        "name": "Miami",
+        "description": "Miami, officially the City of Miami, is a coastal metropolis located in Miami-Dade County in southeastern Florida.",
+        "x": 838,
+        "y": 633,
+        "picts": [
+          "https://images.unsplash.com/photo-1514214246283-d427a95c5d2f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1080&q=80",
+          "https://images.unsplash.com/photo-1506966953602-c20cc11f75e3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1164&q=80"
+        ]
+      },
+      {
+        "id": "hab",
+        "name": "Habana",
+        "description": "Cuba, country of the West Indies, the largest single island of the archipelago, and one of the more-influential states of the Caribbean region.",
+        "x": 894,
+        "y": 721,
+        "picts": [
+          "https://images.unsplash.com/photo-1570299437488-d430e1e677c7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1025&q=80",
+          "https://images.unsplash.com/photo-1587636662734-8cf7f3fcc0b5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+        ]
+      },
+      {
+        "id": "mex",
+        "name": "Mexico",
+        "description": "Mexico City is the capital and largest city of Mexico, as well as the most populous city in North America, and is one of the country's 32 federal entities.",
+        "x": 665,
+        "y": 765,
+        "picts": [
+          "https://images.unsplash.com/photo-1512813195386-6cf811ad3542?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+          "https://images.unsplash.com/photo-1521216774850-01bc1c5fe0da?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+        ]
+      },
+      {
+        "id": "nic",
+        "name": "Nicaragua",
+        "description": "Nicaragua is the largest country in Central America with an area of 130,373km² and contains the largest freshwater body in Central America.",
+        "x": 800,
+        "y": 838,
+        "picts": [
+          "https://images.unsplash.com/photo-1494444753080-e0d457fa3563?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+          "https://images.unsplash.com/photo-1599147092320-9ce79b36caa4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1559&q=80"
+        ]
+      },
+      {
+        "id": "col",
+        "name": "Colombia",
+        "description": "Colombia, officially the Republic of Colombia, is a transcontinental country spanning South America and an insular region in North America.",
+        "x": 928,
+        "y": 924,
+        "picts": [
+          "https://images.unsplash.com/photo-1533699224246-6dc3b3ed3304?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1631&q=80",
+          "https://images.unsplash.com/photo-1583531352515-8884af319dc1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+        ]
+      }
+    ],
+    "planes": [
+      {
+        "id": "9H-AMD",
+        "name": "Plane1",
+        "label": "Visible label name",
+        "img_url": "./Assets/Images/Planes/01.png",
+        "video-url": "http://host/video1",
+        "from": "mia",
+        "to": "sdq",
+        "total_time": 5,
+        "fligh_time": 3,
+        "seating": "220 asientos",
+        "flights-range": "Rango de vuelo de 5 horas",
+        "capacity": "21,000 kg de capacidad",
+        "size": "37,57 metros de largo",
+              "arival_time": "01:00",
+              "depature_time": "06:00"
+      },
+      {
+        "id": "9H-AME",
+        "name": "Plane2",
+        "label": "Visible label name2",
+        "img_url": "./Assets/Images/Planes/02.png",
+        "video-url": "http://host/video2",
+        "from": "mex",
+        "to": "nic",
+        "total_time": 18,
+        "fligh_time": 5,
+        "seating": "320 asientos",
+        "flights-range": "Rango de vuelo de 10 horas",
+        "capacity": "42,000 kg de capacidad",
+        "size": "40,57 metros de largo",
+              "arival_time": "02:00",
+              "depature_time": "06:00"
+      },
+      {
+        "id": "9H-AME3",
+        "name": "Plane3",
+        "label": "Visible label name2",
+        "img_url": "./Assets/Images/Planes/03.png",
+        "video-url": "http://host/video2",
+        "from": "col",
+        "to": "mex",
+        "total_time": 28,
+        "fligh_time": 15,
+        "seating": "320 asientos",
+        "flights-range": "Rango de vuelo de 10 horas",
+        "capacity": "42,000 kg de capacidad",
+        "size": "40,57 metros de largo",
+              "arival_time": "06:00",
+              "depature_time": "02:00"
+      },
+      {
+        "id": "9H-AME4",
+        "name": "Plane4",
+        "label": "Visible label name2",
+        "img_url": "./Assets/Images/Planes/04.png",
+        "video-url": "http://host/video2",
+        "from": "nic",
+        "to": "col",
+        "total_time": 28,
+        "fligh_time": 10,
+        "seating": "320 asientos",
+        "flights-range": "Rango de vuelo de 10 horas",
+        "capacity": "42,000 kg de capacidad",
+        "size": "40,57 metros de largo",
+              "arival_time": "06:00",
+              "depature_time": "11:00"
+      },
+      {
+        "id": "9H-AME5",
+        "name": "Plane5",
+        "label": "Visible label name2",
+        "img_url": "./Assets/Images/Planes/05.png",
+        "video-url": "http://host/video2",
+        "from": "hab",
+        "to": "mia",
+        "total_time": 18,
+        "fligh_time": 5,
+        "seating": "320 asientos",
+        "flights-range": "Rango de vuelo de 10 horas",
+        "capacity": "42,000 kg de capacidad",
+        "size": "40,57 metros de largo",
+              "arival_time": "10:00",
+              "depature_time": "14:00"
+      },
+      {
+        "id": "9H-AME6",
+        "name": "Plane6",
+        "label": "Visible label name2",
+        "img_url": "./Assets/Images/Planes/05.png",
+        "video-url": "http://host/video2",
+        "from": "mex",
+        "to": "mia",
+        "total_time": 80,
+        "fligh_time": 10,
+        "seating": "320 asientos",
+        "flights-range": "Rango de vuelo de 10 horas",
+        "capacity": "42,000 kg de capacidad",
+        "size": "40,57 metros de largo",
+              "arival_time": "03:00",
+              "depature_time": "06:00"
+      }
+    ],
+    "image_urls": [
+      {
+        "image": "https://wallpapers.com/images/high/hd-river-in-the-mountains-kgb9wrcm1wmrfa5m.jpg"
+      },
+      {
+        "image": "https://wallpapers.com/images/high/hd-vacation-house-in-the-beach-j4jasqgcc5ismew8.jpg"
+      },
+      {
+        "image": "https://wallpapers.com/images/high/hd-beach-dock-44r3w5nyqr38tq16.jpg"
+      }
+    ]
+  }
+  
