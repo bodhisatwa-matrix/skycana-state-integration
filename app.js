@@ -1145,16 +1145,16 @@ const HomeScreenComponent = {
   template: /*html*/ `
     <div class="zoomed-in">
         <div class="zoomed-in__heading">
-        <p class="time-now">13:05</p>
-        <img class="logo" src="./Assets/Images/logo@2x_white.png" alt="SkyCana" />
-        </div>
-        <div class="zoomed-in__day">Martes, 1 de Marzo</div>
-        <div class="zoomed-in__welcome-msg">
-        <div class="temp">
-            <img src="./Assets/Images/cloud-icon.png" alt="cloud-icon" />
-            <p class="temp__value">30 &#x2103;</p>
-        </div>
-        <div class="welcome-msg">Te damos la Bienvenida</div>
+          <p class="time-now">13:05</p>
+          <img class="logo" src="./Assets/Images/logo@2x_white.png" alt="SkyCana" />
+          </div>
+          <div class="zoomed-in__day">Martes, 1 de Marzo</div>
+          <div class="zoomed-in__welcome-msg">
+          <div class="temp">
+              <img src="./Assets/Images/cloud-icon.png" alt="cloud-icon" />
+              <p class="temp__value">30 &#x2103;</p>
+          </div>
+          <div class="welcome-msg">Te damos la Bienvenida</div>
         </div>
         <br />
         <div class="zoomed-in__hashtag">#DespeguemosRD</div>

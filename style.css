@@ -117,6 +117,7 @@ body {
 
 .zoomed-in__heading {
   display: flex;
+  /* visibility: hidden; */
 }
 
 .zoomed-in__heading .time-now {
@@ -126,6 +127,7 @@ body {
   color: #ffffff;
   opacity: 1;
   flex: 0.5;
+  visibility: hidden;
 }
 
 .zoomed-in__day {
@@ -138,6 +140,7 @@ body {
   letter-spacing: 0px;
   color: #ffffff;
   opacity: 1;
+  visibility: hidden;
 }
 
 .zoomed-in__welcome-msg {
@@ -149,6 +152,7 @@ body {
   display: flex;
   align-items: center;
   flex: 0.5;
+  visibility: hidden;
 }
 
 .zoomed-in__welcome-msg .temp__value {
@@ -277,6 +281,7 @@ body {
   top: 5%;
   left: 0.3%;
   transform: scale(0.8);
+  visibility: hidden;
 }
 
 .world-map__time-now {
@@ -286,6 +291,7 @@ body {
   position: absolute;
   top: 12%;
   left: 2%;
+  visibility: hidden;
 }
 
 .world-map__day {
@@ -295,6 +301,7 @@ body {
   position: absolute;
   top: 19%;
   left: 2%;
+  visibility: hidden;
 }
 
 .world-map__temp {
@@ -303,6 +310,7 @@ body {
   left: 2.3%;
   display: flex;
   align-items: center;
+  visibility: hidden;
 }
 
 .world-map__temp img {
@@ -406,6 +414,7 @@ body {
   background-color: #fff;
   border-radius: 55px;
   padding: 30px;
+  visibility: hidden;
 }
 
 .nuestra-flota__destination__title {
