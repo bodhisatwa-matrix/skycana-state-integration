@@ -494,6 +494,10 @@ function secondScreen() {
 /**************/
 /** open third screen **/
 function thirdScreen() {
+  if(!w && !h) {
+    w = _$('.container').getBoundingClientRect()?.width ||  1152;
+    h = _$('.container').getBoundingClientRect()?.height || 792;
+  }
   clearAllPlanesFromDOM()
   if(mapIsZommedIn) mapIsZommedIn = false;
   selected_option = "flota-shutter";
@@ -521,25 +525,31 @@ function mapZoomIn () {
 /**************/
 /** after zoomin world map set to center **/
 function positionFirstWindowContent(){
-  _$('.container').scrollLeft = (3081, _$('.container').getBoundingClientRect().width) / 2;
-  _$('.container').scrollTop = (1564, _$('.container').getBoundingClientRect().height) / 2;
+  // _$('.container').scrollLeft = (3081, w) / 2;
+  // _$('.container').scrollTop = (1564, h) / 2;
   var {width} = document.body.getBoundingClientRect();
   if(width > 1365) {
     initialScale = 1.0;
     currentScale = 1.0;
     _$('.container').scrollLeft = 596;
-    _$('.container').scrollTop = 396;
+    _$('.container').scrollTop = 356;
+  } else {
+    _$('.container').scrollLeft = 596;
+    _$('.container').scrollTop = 500;
   }
 }
 function positionSecondWindowContent(){
-  _$('.container').scrollLeft = (_$('.container').getBoundingClientRect().width) / 2;
-  _$('.container').scrollTop = (_$('.container').getBoundingClientRect().height) / 2;
+  // _$('.container').scrollLeft = (w) / 2;
+  // _$('.container').scrollTop = (h) / 2;
   var {width} = document.body.getBoundingClientRect();
   if(width > 1365) {
     initialScale = 1.0;
     currentScale = 1.0;
     _$('.container').scrollLeft = 550;
     _$('.container').scrollTop = 550;
+  } else {
+    _$('.container').scrollLeft = 596;
+    _$('.container').scrollTop = 500;
   } 
 }
 
@@ -550,8 +560,8 @@ function setMapToCenter() {
     _$('.container').focus();
     // _$('.container').scrollLeft = (_$("#Map").getBoundingClientRect().width, _$('.container').getBoundingClientRect().width) / 2;
     // _$('.container').scrollTop = (_$("#Map").getBoundingClientRect().height, _$('.container').getBoundingClientRect().height) / 2;
-    _$('.container').scrollLeft = (3081, w) / 2;
-    _$('.container').scrollTop = (1564, h) / 2;
+    // _$('.container').scrollLeft = (3081, w) / 2;
+    // _$('.container').scrollTop = (1564, h) / 2;
     /*var {width} = bodyWidth;
     if(width > 1365) {
       initialScale = 1.0;
@@ -564,8 +574,8 @@ function setMapToCenter() {
     _$('.container').focus();
     // _$('.container').scrollLeft = (_$("#Map").getBoundingClientRect().width, _$('.container').getBoundingClientRect().width) / 2;
     // _$('.container').scrollTop = (_$("#Map").getBoundingClientRect().height, _$('.container').getBoundingClientRect().height) / 2;
-    _$('.container').scrollLeft = (3081, w) / 2;
-    _$('.container').scrollTop = (1564, h) / 2;
+    // _$('.container').scrollLeft = (3081, w) / 2;
+    // _$('.container').scrollTop = (1564, h) / 2;
     /*var {width} = bodyWidth;
     if(width > 1365) {
       initialScale = 1.0;
@@ -587,8 +597,6 @@ function autoZoom() {
     _$("#Map").style.visibility = "visible";
     _$("#Map").style.transform = `scale(2.0)`;
     _$("#Map").style.transformOrigin = "300px 600px";
-    // _$('.container').scrollTop = 396;
-    // _$('.container').scrollLeft = 596;
   } else if(selected_option === "destinos-shutter") {
     var timeline = gsap.timeline({delay: 1});
     timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
