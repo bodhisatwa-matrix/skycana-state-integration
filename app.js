@@ -2179,8 +2179,8 @@ function renderAllPlanes(){
   svg.setAttributeNS(null, "height", "1303px");
   svg.setAttributeNS(null, "width", "2567.984px");
   svg.setAttributeNS(null, "fill", "none");1
-  Object.keys(jsonData).forEach(data => {
-  });
+  /*Object.keys(jsonData).forEach(data => {
+  });*/
   var div1 = document.createElement("div");
   // var planes = getRandomPlane(jsonData["planes"]);
   var planes = staticThreePlaneData();
@@ -2195,18 +2195,24 @@ function renderAllPlanes(){
     path.setAttributeNS(null, "d", `M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}`);
     var img = document.createElement("img");
     img.src = plane.img_url;
-    img.setAttribute("style", `offset-path: path('M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}')`);
+    if(Math.atan2(from.y - to.y, from.x - to.x) < 0) {
+      img.setAttribute("style", `offset-path: path('M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}'); width: 100px; position: absolute;
+      top: 0;z-index: 4; transform: translateY(20px) scaleY(-1) scaleX(-1)`);
+    } else {
+      img.setAttribute("style", `offset-path: path('M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}'); width: 100px; position: absolute;
+      top: 0;z-index: 4; transform: translateY(-20px) scaleX(-1)`);
+    }
     img.setAttribute("class", "plane-img");
     img.setAttribute("id", plane.id);
     img.setAttribute("onmouseover", "mouseOverPlane(event)");
     svg.appendChild(path);
-    
     div1.style.width = "100%";
     div1.style.height = "100%";
     div1.appendChild(svg);
     div1.appendChild(img);
     var time = ((plane.fligh_time / plane.total_time) * 100);
     arr.push({id: plane.id, time: time});
+    
   }
 
   div.appendChild(div1);
@@ -2231,7 +2237,8 @@ function flightInfoPopupHTML(flightID){
   }
 }
 function showDynamicPlaneData(id) {
-  var planeData = jsonData["planes"].find(o => o.id == id);
+  // var planeData = jsonData["planes"].find(o => o.id == id);
+  var planeData = staticThreePlaneData().find(o => o.id == id);
   _$('.plane-id').innerHTML = planeData.id;
   _$('.plane-name').innerHTML = planeData.name;
   // _$('.location-source').querySelector("h3").innerHTML = planeData.name;
@@ -2254,20 +2261,33 @@ function calculatePlaneFlyingAnimation(data) {
   for (const s of styles) {
     s.remove();
   }
+  /*var imgs = gsap.utils.toArray(".plane-container img");
+  imgs.forEach(img => {
+    var t1 = gsap.timeline();
+    t1.from(img, {drawSVG: 0, duration: 5}).from(img, {scale: 1}, '-=50');
+
+  });*/
   for (const d of data) {
     var new_id = d.id.replace(/-/g, '');
+    var rules = "0% {offset-distance: 0%;}";
+    var time = 0;
+    for(var i=0; i<100 && time<d.time; i++) {
+      if(i > 90) {
+        rules += `${i}% {offset-distance: ${time}%;}`;
+      } else {
+        rules += `${i}% {offset-distance: ${time}%}`;
+      }
+      time++;
+    }
+    rules += `100% {offset-distance: ${d.time}%;}`;
     document.body.appendChild(
       Object.assign(document.createElement("style"), {
-        textContent: `@keyframes fly_plane${new_id} {
-          0% {
-            offset-distance: 0%;
-          }
-          100% {
-            offset-distance: ${d.time}%;
-          }
-        }`
+        textContent: `@keyframes fly_plane${new_id} {${rules}}`
       }));
-      document.getElementById(`${d.id}`).style.animation = `fly_plane${new_id} 4s linear forwards`;
+      document.getElementById(`${d.id}`).style.animation = `fly_plane${new_id} 4s ease forwards`;
+      _$('.plane-img').addEventListener('animationend', () => {
+        //  _$('.plane-img').style.transform = "scale(-1)";
+      });
   }
 
 }
@@ -2301,7 +2321,7 @@ function staticThreePlaneData(){
         "from": "mia",
         "to": "punta",
         "total_time": 100,
-        "fligh_time": 80,
+        "fligh_time": 90,
         "seating": "220 asientos",
         "flights-range": "Rango de vuelo de 5 horas",
         "capacity": "21,000 kg de capacidad",
@@ -2335,7 +2355,7 @@ function staticThreePlaneData(){
         "from": "hab",
         "to": "mia",
         "total_time": 100,
-        "fligh_time": 30,
+        "fligh_time": 20,
         "seating": "220 asientos",
         "flights-range": "Rango de vuelo de 5 horas",
         "capacity": "21,000 kg de capacidad",
@@ -2453,3 +2473,4 @@ function staticThreePlaneData(){
   }
   return datas.data_1;
 }
+
