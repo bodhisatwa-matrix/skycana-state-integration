@@ -2223,17 +2223,17 @@ function renderAllPlanes(){
     }
     img.setAttribute("class", "plane-img");
     img.setAttribute("id", "x"+plane.id);
-    // img.setAttribute("onmouseover", "mouseOverPlane(event)");
-    var loader = createLoaderCircle("x"+plane.id);
+    img.setAttribute("onmouseover", "mouseOverPlane(event)");
+    /*var loader = createLoaderCircle("x"+plane.id);
     
-    setPlaneListener(img);
+    setPlaneListener(img);*/
     svg.appendChild(path);
     div1.style.width = "100%";
     div1.style.height = "100%";
     div1.appendChild(svg);
     div1.appendChild(img);
     
-    div1.appendChild(loader);
+    // div1.appendChild(loader);
     var time = ((plane.fligh_time / plane.total_time) * 100);
     arr.push({id: plane.id, time: time});
     
