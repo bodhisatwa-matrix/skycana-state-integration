@@ -55,10 +55,13 @@ var windowClosingTimer;
 var currentlyOpenWindow = null;
 var currentlyOpeningWindow = null;
 var currentlyClosingWindow = null;
-
+var w;
+var h;
+var bodyWidth;
 /** All events **/
 emitter.on('startApp', (event) => {
-  document.body.style.cursor = "none";  
+  document.body.style.cursor = "none";
+  bodyWidth = document.body.getBoundingClientRect();
 });
 
 emitter.on('keydown', (event) => {
@@ -397,6 +400,10 @@ function closeWindow(which) {
 /** opne first screen  **/
 function firstScreen() {
   //set map to correct position
+  if(!w && !h) {
+    w = _$('.container').getBoundingClientRect()?.width ||  1152;
+    h = _$('.container').getBoundingClientRect()?.height || 792;
+  }
   positionFirstWindowContent();
   clearAllPlanesFromDOM();
   selected_option = "vuelos-shutter";
@@ -520,8 +527,8 @@ function positionFirstWindowContent(){
   if(width > 1365) {
     initialScale = 1.0;
     currentScale = 1.0;
-    _$('.container').scrollLeft = 450;
-    _$('.container').scrollTop = 510;
+    _$('.container').scrollLeft = 596;
+    _$('.container').scrollTop = 396;
   }
 }
 function positionSecondWindowContent(){
@@ -537,35 +544,35 @@ function positionSecondWindowContent(){
 }
 
 function setMapToCenter() {
-  
+  console.log(h, w);
   if(selected_option === "vuelos-shutter"){
     _$('.container').setAttribute("tabindex", 1);
     _$('.container').focus();
     // _$('.container').scrollLeft = (_$("#Map").getBoundingClientRect().width, _$('.container').getBoundingClientRect().width) / 2;
     // _$('.container').scrollTop = (_$("#Map").getBoundingClientRect().height, _$('.container').getBoundingClientRect().height) / 2;
-    _$('.container').scrollLeft = (3081, _$('.container').getBoundingClientRect().width) / 2;
-    _$('.container').scrollTop = (1564, _$('.container').getBoundingClientRect().height) / 2;
-    var {width} = document.body.getBoundingClientRect();
+    _$('.container').scrollLeft = (3081, w) / 2;
+    _$('.container').scrollTop = (1564, h) / 2;
+    /*var {width} = bodyWidth;
     if(width > 1365) {
       initialScale = 1.0;
       currentScale = 1.0;
       _$('.container').scrollLeft = 600;
       _$('.container').scrollTop = 510;
-    }
+    }*/
   }else if(selected_option === "destinos-shutter"){
     _$('.container').setAttribute("tabindex", 1);
     _$('.container').focus();
     // _$('.container').scrollLeft = (_$("#Map").getBoundingClientRect().width, _$('.container').getBoundingClientRect().width) / 2;
     // _$('.container').scrollTop = (_$("#Map").getBoundingClientRect().height, _$('.container').getBoundingClientRect().height) / 2;
-    _$('.container').scrollLeft = (_$('.container').getBoundingClientRect().width) / 2;
-    _$('.container').scrollTop = (_$('.container').getBoundingClientRect().height) / 2;
-    var {width} = document.body.getBoundingClientRect();
+    _$('.container').scrollLeft = (3081, w) / 2;
+    _$('.container').scrollTop = (1564, h) / 2;
+    /*var {width} = bodyWidth;
     if(width > 1365) {
       initialScale = 1.0;
       currentScale = 1.0;
       _$('.container').scrollLeft = 550;
       _$('.container').scrollTop = 550;
-    } 
+    } */
   }else{}
   autoZoom();
   console.log('set map to center called');
@@ -574,11 +581,22 @@ function setMapToCenter() {
 /**************/
 /** auto zoom **/
 function autoZoom() {
-  var timeline = gsap.timeline({delay: 1});
-  timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
-  _$("#Map").style.visibility = "visible";
-  _$("#Map").style.transform = `scale(1.6)`;
-  _$("#Map").style.transformOrigin = "300px 600px";
+  if(selected_option === "vuelos-shutter") {
+    var timeline = gsap.timeline({delay: 1});
+    timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
+    _$("#Map").style.visibility = "visible";
+    _$("#Map").style.transform = `scale(2.0)`;
+    _$("#Map").style.transformOrigin = "300px 600px";
+    // _$('.container').scrollTop = 396;
+    // _$('.container').scrollLeft = 596;
+  } else if(selected_option === "destinos-shutter") {
+    var timeline = gsap.timeline({delay: 1});
+    timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
+    _$("#Map").style.visibility = "visible";
+    _$("#Map").style.transform = `scale(1.6)`;
+    _$("#Map").style.transformOrigin = "300px 600px";
+  } else {}
+  
   /*if(width == 0) {
   } else {
     _$("#Map").style.transformOrigin = "400px 660px";
@@ -823,8 +841,9 @@ function DestinationPoint(x, y, id, cityName) {
 function createLoaderCircle(id) {
   var loaderDiv = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   loaderDiv.setAttributeNS(null, "viewBox", "0 0 300 300");
+  loaderDiv.setAttributeNS(null, "id", `plane${id}`);
   loaderDiv.setAttributeNS(null, "preserveAspectRatio", "none");
-  loaderDiv.setAttributeNS(null, "style", "width:50; height:50; top:0; left:0; position: absolute;");
+  loaderDiv.setAttributeNS(null, "style", "width:50px; height:50px; top:0; left:0; position: absolute;");
   var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
   circle.setAttributeNS(null, "cx", 100);
   circle.setAttributeNS(null, "cy", 100);
@@ -2203,13 +2222,18 @@ function renderAllPlanes(){
       top: 0;z-index: 4; transform: translateY(-20px) scaleX(-1)`);
     }
     img.setAttribute("class", "plane-img");
-    img.setAttribute("id", plane.id);
-    img.setAttribute("onmouseover", "mouseOverPlane(event)");
+    img.setAttribute("id", "x"+plane.id);
+    // img.setAttribute("onmouseover", "mouseOverPlane(event)");
+    var loader = createLoaderCircle("x"+plane.id);
+    
+    setPlaneListener(img);
     svg.appendChild(path);
     div1.style.width = "100%";
     div1.style.height = "100%";
     div1.appendChild(svg);
     div1.appendChild(img);
+    
+    div1.appendChild(loader);
     var time = ((plane.fligh_time / plane.total_time) * 100);
     arr.push({id: plane.id, time: time});
     
@@ -2237,6 +2261,7 @@ function flightInfoPopupHTML(flightID){
   }
 }
 function showDynamicPlaneData(id) {
+  id = id.substring(1);
   // var planeData = jsonData["planes"].find(o => o.id == id);
   var planeData = staticThreePlaneData().find(o => o.id == id);
   _$('.plane-id').innerHTML = planeData.id;
@@ -2268,11 +2293,11 @@ function calculatePlaneFlyingAnimation(data) {
 
   });*/
   for (const d of data) {
-    var new_id = d.id.replace(/-/g, '');
-    var rules = "0% {offset-distance: 0%;}";
-    var time = 0;
-    for(var i=0; i<100 && time<d.time; i++) {
-      if(i > 90) {
+    let new_id = d.id.replace(/-/g, '');
+    let rules = "0% {offset-distance: 0%;}";
+    let time = 0;
+    for(let i=0; i<100 && time<d.time; i++) {
+      if(i > 90 ) {
         rules += `${i}% {offset-distance: ${time}%;}`;
       } else {
         rules += `${i}% {offset-distance: ${time}%}`;
@@ -2284,9 +2309,9 @@ function calculatePlaneFlyingAnimation(data) {
       Object.assign(document.createElement("style"), {
         textContent: `@keyframes fly_plane${new_id} {${rules}}`
       }));
-      document.getElementById(`${d.id}`).style.animation = `fly_plane${new_id} 4s ease forwards`;
+      document.getElementById(`x${d.id}`).style.animation = `fly_plane${new_id} 4s ease-in forwards`;
       _$('.plane-img').addEventListener('animationend', () => {
-        //  _$('.plane-img').style.transform = "scale(-1)";
+        //  _$('.plane-img').style.transform = "translateY(20px) scaleY(-1) scaleX(-1)";
       });
   }
 
@@ -2321,7 +2346,7 @@ function staticThreePlaneData(){
         "from": "mia",
         "to": "punta",
         "total_time": 100,
-        "fligh_time": 90,
+        "fligh_time": 100,
         "seating": "220 asientos",
         "flights-range": "Rango de vuelo de 5 horas",
         "capacity": "21,000 kg de capacidad",
@@ -2473,4 +2498,54 @@ function staticThreePlaneData(){
   }
   return datas.data_1;
 }
+var ll;
+function setPlaneListener(el) {
+  
+  el.addEventListener('mouseover', function(e) {
+    ll = e.target.id;
+    _$(`#plane${ll}`).style.top = e.pageY + (e.pageX / 2.4) + "px";
+    _$(`#plane${ll}`).style.left = e.pageX + 110 + "px";
+    
+    _$(`.${ll}`).style.display = "block";
+    angle = 0;
+    hidePlaneLoaderAnimation(e.target.id);
+    showPlaneloaderAnimation(e.target.id);
+  });
+  el.addEventListener('mouseout', function(e) {
+    var popup = _$(".city-data__pop-up");
+    if(popup.style.display == "none") {
+      _$(`.${ll}`).style.display = "none";
+      hidePlaneLoaderAnimation(e.target.id);
+    }
+  });
+}
 
+function showPlaneloaderAnimation(id) {
+  window.clearInterval(window.timer);
+  var circle = _$(`.${id}`);
+  var interval = 30;
+  var angle_increment = 6;
+  window.timer = window.setInterval(function() {
+    circle.setAttribute("stroke-dasharray", angle + ", 20000");
+        if (angle >= 360) {
+          window.clearInterval(window.timer);
+          showDynamicPlaneData(id);
+          _$(`.${ll}`).style.display = "none";
+        }
+    angle += angle_increment;
+  }.bind(this), interval);
+}
+function hidePlaneLoaderAnimation(id) {
+  window.clearInterval(window.timer);
+  var circle = _$(`.${id}`);
+  var interval = 30;
+  var angle_increment = 6;
+  window.timer = window.setInterval(function() {
+    circle.setAttribute("stroke-dasharray", angle + ", 20000");
+    if (angle <= 0) {
+      window.clearInterval(window.timer);
+      // gsap.to('.city-data__pop-up', { opacity: 0, display: "none" });
+    }
+    angle -= angle_increment;
+  }.bind(this), interval);
+}
