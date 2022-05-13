@@ -404,6 +404,7 @@ function firstScreen() {
     w = _$('.container').getBoundingClientRect()?.width ||  1152;
     h = _$('.container').getBoundingClientRect()?.height || 792;
   }
+  
   positionFirstWindowContent();
   clearAllPlanesFromDOM();
   selected_option = "vuelos-shutter";
@@ -529,13 +530,11 @@ function positionFirstWindowContent(){
   // _$('.container').scrollTop = (1564, h) / 2;
   var {width} = document.body.getBoundingClientRect();
   if(width > 1365) {
-    initialScale = 1.0;
-    currentScale = 1.0;
-    _$('.container').scrollLeft = 596;
-    _$('.container').scrollTop = 356;
-  } else {
     _$('.container').scrollLeft = 596;
     _$('.container').scrollTop = 500;
+  } else {
+    _$('.container').scrollLeft = 596;
+    _$('.container').scrollTop = 450;
   }
 }
 function positionSecondWindowContent(){
@@ -543,13 +542,11 @@ function positionSecondWindowContent(){
   // _$('.container').scrollTop = (h) / 2;
   var {width} = document.body.getBoundingClientRect();
   if(width > 1365) {
-    initialScale = 1.0;
-    currentScale = 1.0;
-    _$('.container').scrollLeft = 550;
-    _$('.container').scrollTop = 550;
+    _$('.container').scrollLeft = 596;
+    _$('.container').scrollTop = 520;
   } else {
     _$('.container').scrollLeft = 596;
-    _$('.container').scrollTop = 500;
+    _$('.container').scrollTop = 410;
   } 
 }
 
@@ -569,6 +566,14 @@ function setMapToCenter() {
       _$('.container').scrollLeft = 600;
       _$('.container').scrollTop = 510;
     }*/
+    var {width} = document.body.getBoundingClientRect();
+    if(width > 1365) {
+      _$('.container').scrollLeft = 596;
+      _$('.container').scrollTop = 500;
+    } else {
+      _$('.container').scrollLeft = 596;
+      _$('.container').scrollTop = 450;
+    }
   }else if(selected_option === "destinos-shutter"){
     _$('.container').setAttribute("tabindex", 1);
     _$('.container').focus();
@@ -583,6 +588,14 @@ function setMapToCenter() {
       _$('.container').scrollLeft = 550;
       _$('.container').scrollTop = 550;
     } */
+    var {width} = document.body.getBoundingClientRect();
+    if(width > 1365) {
+      _$('.container').scrollLeft = 596;
+      _$('.container').scrollTop = 520;
+    } else {
+      _$('.container').scrollLeft = 596;
+      _$('.container').scrollTop = 410;
+    }
   }else{}
   autoZoom();
   console.log('set map to center called');
