@@ -632,14 +632,7 @@ function setMapToCenter() {
       _$('.container').scrollLeft = 550;
       _$('.container').scrollTop = 550;
     } */
-    var {width} = document.body.getBoundingClientRect();
-    if(width > 1365) {
-      _$('.container').scrollLeft = 596;
-      _$('.container').scrollTop = 520;
-    } else {
-      _$('.container').scrollLeft = 596;
-      _$('.container').scrollTop = 410;
-    }
+   
   }else{}
   autoZoom();
   console.log('set map to center called');
@@ -650,34 +643,42 @@ function setMapToCenter() {
 function autoZoom() {
   var all_locations = _$$('.location-point');
   let box = {};
-  var xAixs = [];
+  var xAxis = [];
   var yAxis = [];
   for (const loc of all_locations) {
-    xAixs.push(loc.offsetLeft);
-    yAxis.push(loc.offsetTop);
+    let p = jsonData.Locations.find(o => o.id == loc.id);
+    xAxis.push(p.x);
+    yAxis.push(p.y);
   }
-  box.xMax = function(array) {
-    return Math.max.apply(Math, array);
+  box.maxX = Math.max(...xAxis);
+  box.maxY = Math.max(...yAxis);
+  box.minX = Math.min(...xAxis);
+  box.minY = Math.min(...yAxis);
+  var {width} = document.body.getBoundingClientRect();
+  if(width > 1365) {
+    _$('.container').scrollLeft = 596;
+    _$('.container').scrollTop = 920;
+  } else {
+    _$('.container').scrollLeft = 596;
+    _$('.container').scrollTop = 410;
   }
-  console.log(box.xMax)
   if(selected_option === "vuelos-shutter") {
     var timeline = gsap.timeline({delay: 1});
     timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
     _$("#Map").style.visibility = "visible";
     _$("#Map").style.transform = `scale(2.0)`;
-    _$("#Map").style.transformOrigin = "300px 600px";
+    // _$("#Map").style.transformOrigin = "300px 600px";
+    _$("#Map").style.transformOrigin = `${box.maxX - box.minX}px ${box.maxY - box.minY}px`;
+
   } else if(selected_option === "destinos-shutter") {
     var timeline = gsap.timeline({delay: 1});
     timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
     _$("#Map").style.visibility = "visible";
     _$("#Map").style.transform = `scale(1.6)`;
     _$("#Map").style.transformOrigin = "300px 600px";
+
   } else {}
   
-  /*if(width == 0) {
-  } else {
-    _$("#Map").style.transformOrigin = "400px 660px";
-  }*/
 }
 /**************/
 /** show city locations on first screen **/
