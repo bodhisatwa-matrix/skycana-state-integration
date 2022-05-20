@@ -431,6 +431,13 @@ function firstScreen() {
   _$("#Path___484").setAttribute("d", "M0,0H175.7V57.532H0Z");
   _$("#Line___3").setAttribute("transform","translate(67.296 20.928)");
   //new changes
+  // remove all location point from dom
+  let parentDivLoc = _$$(".location-point-parent");
+    if(parentDivLoc.length) {
+      for (const i of parentDivLoc) {
+        i.remove();
+      }
+    } 
   readTextFile("Assets/data/SkyCanaXP-DataModel.json", function (text) {
     jsonData = JSON.parse(text);
     // rendering locations in map related code here
@@ -506,6 +513,7 @@ function secondScreen() {
         destination_point.render();
     })
   });
+  
   //end changes
   if (!mapIsZommedIn) {
     setTimeout(function () {
@@ -535,7 +543,9 @@ function secondScreen() {
         autoAlpha: 0,
       });
       gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 1, duration: 0, display: "block", autoAlpha: 1 });
-      showDestinationPoints();
+      setTimeout(() => {
+        showDestinationPoints();
+      }, 300);
   }
   
 }
@@ -603,17 +613,6 @@ function setMapToCenter() {
   if(selected_option === "vuelos-shutter"){
     _$('.container').setAttribute("tabindex", 1);
     _$('.container').focus();
-    // _$('.container').scrollLeft = (_$("#Map").getBoundingClientRect().width, _$('.container').getBoundingClientRect().width) / 2;
-    // _$('.container').scrollTop = (_$("#Map").getBoundingClientRect().height, _$('.container').getBoundingClientRect().height) / 2;
-    // _$('.container').scrollLeft = (3081, w) / 2;
-    // _$('.container').scrollTop = (1564, h) / 2;
-    /*var {width} = bodyWidth;
-    if(width > 1365) {
-      initialScale = 1.0;
-      currentScale = 1.0;
-      _$('.container').scrollLeft = 600;
-      _$('.container').scrollTop = 510;
-    }*/
     var {width} = document.body.getBoundingClientRect();
     if(width > 1365) {
       _$('.container').scrollLeft = 596;
@@ -625,18 +624,14 @@ function setMapToCenter() {
   }else if(selected_option === "destinos-shutter"){
     _$('.container').setAttribute("tabindex", 1);
     _$('.container').focus();
-    // _$('.container').scrollLeft = (_$("#Map").getBoundingClientRect().width, _$('.container').getBoundingClientRect().width) / 2;
-    // _$('.container').scrollTop = (_$("#Map").getBoundingClientRect().height, _$('.container').getBoundingClientRect().height) / 2;
-    // _$('.container').scrollLeft = (3081, w) / 2;
-    // _$('.container').scrollTop = (1564, h) / 2;
-    /*var {width} = bodyWidth;
+    var {width} = document.body.getBoundingClientRect();
     if(width > 1365) {
-      initialScale = 1.0;
-      currentScale = 1.0;
-      _$('.container').scrollLeft = 550;
-      _$('.container').scrollTop = 550;
-    } */
-   
+      _$('.container').scrollLeft = 596;
+      _$('.container').scrollTop = 500;
+    } else {
+      _$('.container').scrollLeft = 555;
+      _$('.container').scrollTop = 500;
+    }
   }else{}
   autoZoom();
   console.log('set map to center called');
@@ -645,6 +640,8 @@ function setMapToCenter() {
 /**************/
 /** auto zoom **/
 function autoZoom() {
+  var {width} = document.body.getBoundingClientRect();
+  console.log(width, "autozoom")
   var all_locations = _$$('.location-point');
   let box = {};
   var xAxis = [];
@@ -654,32 +651,36 @@ function autoZoom() {
     xAxis.push(p.x);
     yAxis.push(p.y);
   }
-  box.maxX = Math.max(...xAxis);
-  box.maxY = Math.max(...yAxis);
-  box.minX = Math.min(...xAxis);
-  box.minY = Math.min(...yAxis);
-  /*var {width} = document.body.getBoundingClientRect();
-  if(width > 1365) {
-    _$('.container').scrollLeft = 596;
-    _$('.container').scrollTop = 920;
-  } else {
-    _$('.container').scrollLeft = 596;
-    _$('.container').scrollTop = 410;
-  }*/
+  if(all_locations.length) {
+    box.maxX = Math.max(...xAxis);
+    box.maxY = Math.max(...yAxis);
+    box.minX = Math.min(...xAxis);
+    box.minY = Math.min(...yAxis);
+  }
   if(selected_option === "vuelos-shutter") {
     var timeline = gsap.timeline({delay: 1});
-    timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
+    timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 0});
     _$("#Map").style.visibility = "visible";
-    _$("#Map").style.transform = `scale(2.0)`;
-    _$("#Map").style.transformOrigin = "300px 600px";
-    // _$("#Map").style.transformOrigin = `${box.maxX - box.minX}px ${box.maxY - box.minY}px`;
+    if(width > 1366) {
+      _$("#Map").style.transform = `scale(2.0)`;
+      _$("#Map").style.transformOrigin = `${box.maxX - box.minX}px ${box.maxY - box.minY}px`;
+    }else {
+      _$("#Map").style.transform = `scale(1.5)`;
+      _$("#Map").style.transformOrigin = "150px 500px";
+    }
+    // _$("#Map").style.transformOrigin = "300px 600px";
 
   } else if(selected_option === "destinos-shutter") {
     var timeline = gsap.timeline({delay: 1});
-    timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 1});
+    timeline.to('.location-point, .location-point__city-name', {opacity: 1, duration: 0});
     _$("#Map").style.visibility = "visible";
-    _$("#Map").style.transform = `scale(1.6)`;
-    _$("#Map").style.transformOrigin = "300px 600px";
+    if(width > 1366) {
+      _$("#Map").style.transform = `scale(1.6)`;
+      _$("#Map").style.transformOrigin = "300px 600px";
+    } else {
+      _$("#Map").style.transform = `scale(1.5)`;
+      _$("#Map").style.transformOrigin = "250px 500px";
+    }
     // _$("#Map").style.transformOrigin = `${box.maxX - box.minX}px ${box.maxY - box.minY}px`;
 
   } else {}
@@ -760,7 +761,7 @@ function LocationPoint(x, y, id, cityName) {
 
   // render on dom
   this.render = function () {
-    // _$(".world-map__destinations").innerHTML = `<div class="flying-planes"></div>`;
+    // _$$(".location-point-parent").forEach(e => e.remove());
     var parentDiv = document.createElement("div");
     parentDiv.classList.add("location-point-parent");
 
@@ -787,7 +788,6 @@ function LocationPoint(x, y, id, cityName) {
 
     parentDiv.appendChild(div);
     _$(".world-map__destinations").appendChild(parentDiv);
-    console.log("calling", parentDiv);
   };
 }
 function disableDBLClick(e) {
@@ -881,7 +881,7 @@ function Airport() {
 /**************/
 /** generate destination point **/
 function DestinationPoint(x, y, id, cityName) {
-  _$(".world-map__destinations__nuestros-destinos").innerHTML = "";
+  
   this.x = x;
   this.y = y;
   this.id = id;
@@ -2264,7 +2264,6 @@ function renderAllPlanes(){
   for (const plane of planes) {
     var from = locations.find(o => o.id == plane.from);
     var to = locations.find(o => o.id == plane.to);
-    console.log(_$(`#${from.id}`) && _$(`#${to.id}`));
     if(_$(`#${from.id}`) && _$(`#${to.id}`)) {
       var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       path.setAttributeNS(null, "class", "flight-path");

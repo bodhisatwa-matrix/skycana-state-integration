@@ -1,13 +1,24 @@
 {
-  "name": "skycana-state-integration",
+  "name": "skycana-vue3-(copy)",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "dependencies": {
-    "live-server": "^1.2.1"
-  },
+  "description": "",
+  "main": "app.js",
   "scripts": {
-    "start": "live-server --port=9000",
-    "dev": "live-server"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "live-server --port=9000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bodhisatwa-matrix/skycana-state-integration.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bodhisatwa-matrix/skycana-state-integration/issues"
+  },
+  "homepage": "https://github.com/bodhisatwa-matrix/skycana-state-integration#readme",
+  "dependencies": {
+    "live-server": "^1.2.2"
   }
 }
