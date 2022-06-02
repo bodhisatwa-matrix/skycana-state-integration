@@ -60,6 +60,7 @@ var w;
 var h;
 var bodyWidth;
 var pressedKey = 0;
+var firstTime = true;
 /** All events **/
 emitter.on('startApp', (event) => {
   document.body.style.cursor = "none";
@@ -415,13 +416,14 @@ function closeWindow(which) {
 /** opne first screen  **/
 function firstScreen() {
   lastKey = 1;
+  
   //set map to correct position
   if(!w && !h) {
     w = _$('.container').getBoundingClientRect()?.width ||  1152;
     h = _$('.container').getBoundingClientRect()?.height || 792;
   }
   positionFirstWindowContent();
-  clearAllPlanesFromDOM();
+  // clearAllPlanesFromDOM();
   selected_option = "vuelos-shutter";
   _$(".zoomed-in").style.display = "none";
   _$(".world-map__heading").innerHTML = "Vuelos en tiempo real";
@@ -461,7 +463,7 @@ function firstScreen() {
       });
       gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 0, display: "none", duration: 1, autoAlpha: 0 });
       hideDestinationPoins();
-      renderAllPlanes();
+      // renderAllPlanes();
       showLocations();
       // takeOff('e');
     }, 2000);
@@ -478,21 +480,27 @@ function firstScreen() {
     hideDestinationPoins();
     showLocations();
     setTimeout(() => {
-      renderAllPlanes();
+      // renderAllPlanes();
     }, 300);
     // takeOff('e');
   }
-  
+  if(firstTime) {
+    renderAllPlanes();
+    firstTime = false;
+  } else {
+    showAllPlane();
+  }
 }
 /**************/
 /** open second screen **/
 function secondScreen() {
   hideLocations();
   hideDestinationPoins();
+  hideAllPlane();
   // hidePlane();
   lastKey = 2;
   positionSecondWindowContent();
-  clearAllPlanesFromDOM();
+  // clearAllPlanesFromDOM();
   selected_option = "destinos-shutter";
   _$(".zoomed-in").style.display = "none";
   _$(".world-map__heading").innerHTML = "Nuestros destinos";
@@ -552,12 +560,13 @@ function secondScreen() {
 /**************/
 /** open third screen **/
 function thirdScreen() {
+  hideAllPlane();
   lastKey = 3;
   if(!w && !h) {
     w = _$('.container').getBoundingClientRect()?.width ||  1152;
     h = _$('.container').getBoundingClientRect()?.height || 792;
   }
-  clearAllPlanesFromDOM()
+  // clearAllPlanesFromDOM()
   if(mapIsZommedIn) mapIsZommedIn = false;
   selected_option = "flota-shutter";
   _$(".zoomed-in").style.display = "none";
@@ -1030,9 +1039,10 @@ function readTextFile(file, callback) {
 
 /** Function for get random data from an array **/
 function getRandomData(a, count) {
- return a.slice(0, count).map(function () { 
-    return this.splice(Math.floor(Math.random() * this.length), 1)[0];
-}, a.slice());
+ return a.slice(0,5);
+  return a.slice(0, count).map(function () {
+   return this.splice(Math.floor(Math.random() * this.length), 1)[0];
+ }, a.slice());
 }
 /** End **/
 /** generate popup div on hover of second screen city location with city image animation **/
@@ -2258,47 +2268,63 @@ function renderAllPlanes(){
 
   var div1 = document.createElement("div");
   var planes = staticThreePlaneData();
-  var locations = jsonData["Locations"];
-  console.log(jsonData["Locations"]);
-  var arr = [];
-  for (const plane of planes) {
-    var from = locations.find(o => o.id == plane.from);
-    var to = locations.find(o => o.id == plane.to);
-    if(_$(`#${from.id}`) && _$(`#${to.id}`)) {
-      var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttributeNS(null, "class", "flight-path");
-      path.setAttributeNS(null, "d", `M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}`);
-      var img = document.createElement("img");
-      img.src = plane.img_url;
-      if(Math.atan2(from.y - to.y, from.x - to.x) < 0) {
-        img.setAttribute("style", `offset-path: path('M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}'); width: 100px; position: absolute;
-        top: 0;z-index: 4; transform: translateY(20px) scaleY(-1) scaleX(-1)`);
-      } else {
-        img.setAttribute("style", `offset-path: path('M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}'); width: 100px; position: absolute;
-        top: 0;z-index: 4; transform: translateY(-20px) scaleX(-1)`);
+  readTextFile("Assets/data/SkyCanaXP-DataModel.json", function (text) {
+    var loc = JSON.parse(text);
+    var locations = loc["Locations"];
+    var arr = [];
+    for (const plane of planes) {
+      var from = locations.find(o => o.id == plane.from);
+      var to = locations.find(o => o.id == plane.to);
+      if(_$(`#${from.id}`) && _$(`#${to.id}`)) {
+        var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttributeNS(null, "class", "flight-path");
+        path.setAttributeNS(null, "d", `M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}`);
+        var img = document.createElement("img");
+        img.src = plane.img_url;
+        if(Math.atan2(from.y - to.y, from.x - to.x) < 0) {
+          img.setAttribute("style", `offset-path: path('M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}'); width: 100px; position: absolute;
+          top: 0;z-index: 4; transform: translateY(20px) scaleY(-1) scaleX(-1)`);
+        } else {
+          img.setAttribute("style", `offset-path: path('M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}'); width: 100px; position: absolute;
+          top: 0;z-index: 4; transform: translateY(-20px) scaleX(-1)`);
+        }
+        img.setAttribute("class", "plane-img");
+        img.setAttribute("id", "x"+plane.id);
+        img.setAttribute("onmouseover", "mouseOverPlane(event)");
+        /*var loader = createLoaderCircle("x"+plane.id);
+        
+        setPlaneListener(img);*/
+        svg.appendChild(path);
+        div1.style.width = "100%";
+        div1.style.height = "100%";
+        div1.appendChild(svg);
+        div1.appendChild(img);
+        
+        // div1.appendChild(loader);
+        var time = ((plane.fligh_time / plane.total_time) * 100);
+        arr.push({id: plane.id, time: time});
       }
-      img.setAttribute("class", "plane-img");
-      img.setAttribute("id", "x"+plane.id);
-      img.setAttribute("onmouseover", "mouseOverPlane(event)");
-      /*var loader = createLoaderCircle("x"+plane.id);
-      
-      setPlaneListener(img);*/
-      svg.appendChild(path);
-      div1.style.width = "100%";
-      div1.style.height = "100%";
-      div1.appendChild(svg);
-      div1.appendChild(img);
-      
-      // div1.appendChild(loader);
-      var time = ((plane.fligh_time / plane.total_time) * 100);
-      arr.push({id: plane.id, time: time});
     }
-  }
-  console.log(div);
-  div.appendChild(div1);
-  document.querySelector(".flying-planes").appendChild(div);
-  calculatePlaneFlyingAnimation(arr);
+    div.appendChild(div1);
+    document.querySelector(".flying-planes").appendChild(div);
+    calculatePlaneFlyingAnimation(arr);
+  });
+  
+  
 }
+function hideAllPlane() {
+  let plane = _$('.plane-container');
+  if(plane) {
+    plane.style.visibility = "hidden";
+  }
+}
+function showAllPlane() {
+  let plane = _$('.plane-container');
+  if(plane) {
+    plane.style.visibility = "visible";
+  }
+}
+
 function clearAllPlanesFromDOM(){
   var div = _$(".plane-container");
   if(div) {
