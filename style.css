@@ -447,7 +447,7 @@ body {
   top: 24%;
   width: 16%;
   left: 26%;
-  animation: move 15s infinite;
+  /* animation: move 15s infinite; */
 }
 
 .nuestra-flota__clouds__bottom {
@@ -455,7 +455,7 @@ body {
   top: 51%;
   width: 18%;
   right: 35%;
-  animation: move 10s infinite;
+  /* animation: move 10s infinite; */
 }
 
 .nuestra-flota__plus-buttons img {
@@ -1296,15 +1296,15 @@ body {
 .flight-path {
   height: 100%;
   width: 100%;
-  /* stroke-dasharray: 10;
-  stroke-dashoffset: 10000; */
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
+  stroke-dasharray: 10;
+  stroke-dashoffset: 10000;
+  /*stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;*/
   stroke: #24cad2;
   stroke-width: 3;
   fill: none;
-  /* animation: draw 200s linear infinite; */
-  animation: draw 5s linear forwards;
+  animation: draw 200s linear infinite;
+  /* animation: draw 5s linear forwards; */
   z-index: 99;
   top:0;
   left:0;
@@ -1594,6 +1594,7 @@ body {
   background-color: #e59c26;
   display: block;
   z-index: 3;
+  display: none;
   
 }
 
@@ -1603,7 +1604,7 @@ body {
   font: normal normal bold 15px Montserrat;
   color: #e59c26;
   user-select: none;
-  
+  display: none;
 }
 @keyframes fadeIn {
   100% {

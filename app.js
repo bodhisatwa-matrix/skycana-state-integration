@@ -430,6 +430,7 @@ function firstScreen() {
   gsap.from(".world-map", { opacity: 0 , display: "none", duration: 0});
   gsap.to(".world-map", { opacity: 1, display: "block", duration: 0 });
   gsap.to(".nuestra-flota", { opacity: 0, display: "none", duration: 0 });
+  gsap.to('#Map', {opacity: 1, visibility: "visible", duration: 0});
   _$("#Path___484").setAttribute("d", "M0,0H175.7V57.532H0Z");
   _$("#Line___3").setAttribute("transform","translate(67.296 20.928)");
   //new changes
@@ -453,43 +454,50 @@ function firstScreen() {
   if (!mapIsZommedIn) {
     setTimeout(function () {
       mapZoomIn();
-      gsap.to('#Map', {opacity: 1, display: "block", duration: 0});
+      
       setMapToCenter();
       gsap.to(".world-map__destination-point, .destination_text", {
         opacity: 1,
         autoAlpha: 1,
-        duration: 1,
+        duration: 0,
         display: "block",
       });
-      gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 0, display: "none", duration: 1, autoAlpha: 0 });
+      gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 0, display: "none", duration: 0, autoAlpha: 0 });
       hideDestinationPoins();
       // renderAllPlanes();
+      if(firstTime) {
+        renderAllPlanes();
+        firstTime = false;
+      } else {
+        showAllPlane();
+      }
       showLocations();
       // takeOff('e');
     }, 2000);
   } else {
-    gsap.to('#Map', {opacity: 1, display: "block", duration: 0});
+    // gsap.to('#Map', {opacity: 1, visibility: "visible", duration: 0});
     setMapToCenter();
     gsap.to(".world-map__destination-point, .destination_text", {
       opacity: 1,
       autoAlpha: 1,
-      duration: 1,
+      duration: 0,
       display: "block",
     });
-    gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 0, display: "none", duration: 1, autoAlpha: 0 });
+    gsap.to(".world-map__destination-point__nuestros-destinos, .destination_text__nuestros-destinos",{ opacity: 0, display: "none", duration: 0, autoAlpha: 0 });
     hideDestinationPoins();
-    showLocations();
     setTimeout(() => {
       // renderAllPlanes();
+      if(firstTime) {
+        renderAllPlanes();
+        firstTime = false;
+      } else {
+        showAllPlane();
+      }
+      showLocations();
     }, 300);
     // takeOff('e');
   }
-  if(firstTime) {
-    renderAllPlanes();
-    firstTime = false;
-  } else {
-    showAllPlane();
-  }
+ 
 }
 /**************/
 /** open second screen **/
@@ -526,7 +534,7 @@ function secondScreen() {
   if (!mapIsZommedIn) {
     setTimeout(function () {
       mapZoomIn();
-      gsap.to('#Map', {opacity: 1, display: "block", duration: 0});
+      gsap.to('#Map', {opacity: 1, visibility: "visible", duration: 0});
       hideLocations();
       // hidePlane();
       setMapToCenter();
@@ -540,7 +548,7 @@ function secondScreen() {
       showDestinationPoints();
     }, 2000);
   } else {
-    gsap.to('#Map', {opacity: 1, display: "block", duration: 0});
+    gsap.to('#Map', {opacity: 1,visibility: "visible", duration: 0});
       hideLocations();
       // hidePlane();
       setMapToCenter();
@@ -571,7 +579,7 @@ function thirdScreen() {
   selected_option = "flota-shutter";
   _$(".zoomed-in").style.display = "none";
   _$(".world-map__heading").innerHTML = "Nuestra flota";
-  gsap.to('#Map', {opacity: 0, display: "none", duration: 0});
+  gsap.to('#Map', {opacity: 0, visibility: "hidden", duration: 0});
   // _$("#Map").style.visibility = "hidden";
   _$("#Rectangle__3").setAttribute("height", "58.208");
   _$("#Line__3").setAttribute("transform","translate(68.867 24.178)");
@@ -703,11 +711,11 @@ function showLocations() {
     gsap.to(".world-map__destinations", {
       opacity: 1,
       display: "block",
-      duration: 5,
+      duration: 0,
       delay: 1,
     });
-    gsap.to(".location-point", { display: "block", duration: 0.1 });
-    gsap.to(".location-point__city-name", { display: "block", duration: 0.1 });
+    gsap.to(".location-point", { display: "block", duration: 2 });
+    gsap.to(".location-point__city-name", { display: "block", duration: 2 });
   }
 }
 /**************/
@@ -2286,7 +2294,7 @@ function renderAllPlanes(){
           top: 0;z-index: 4; transform: translateY(20px) scaleY(-1) scaleX(-1)`);
         } else {
           img.setAttribute("style", `offset-path: path('M${from.x}, ${from.y} A70,40 0 1,1 ${to.x}, ${to.y}'); width: 100px; position: absolute;
-          top: 0;z-index: 4; transform: translateY(-20px) scaleX(-1)`);
+          top: 0;z-index: 4; transform: translateY(-20px) scale(-1)`);
         }
         img.setAttribute("class", "plane-img");
         img.setAttribute("id", "x"+plane.id);
@@ -2315,13 +2323,15 @@ function renderAllPlanes(){
 function hideAllPlane() {
   let plane = _$('.plane-container');
   if(plane) {
-    plane.style.visibility = "hidden";
+    // plane.style.visibility = "hidden";
+    gsap.to('.plane-container', {visibility: 'hidden', duration: 2, opacity:1});
   }
 }
 function showAllPlane() {
   let plane = _$('.plane-container');
   if(plane) {
-    plane.style.visibility = "visible";
+    gsap.to('.plane-container', {visibility: 'visible', duration: 2, opacity:1});
+    // plane.style.visibility = "visible";
   }
 }
 
